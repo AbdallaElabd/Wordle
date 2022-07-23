@@ -1,0 +1,1 @@
+export { WordleBoard } from './WordleBoard';
