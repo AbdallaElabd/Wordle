@@ -21,6 +21,8 @@ module.exports = {
   },
   rules: {
     'space-before-function-paren': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
 
     // Jest
     // 'jest/no-disabled-tests': 'warn',

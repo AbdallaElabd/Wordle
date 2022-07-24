@@ -1,7 +1,3 @@
-import { getBoardWithCurrentGuess } from 'pages/utils/wordle/board'
-import { useState } from 'react'
-import { useKey } from 'react-use'
-
 import { Container, Row, Tile } from './styled'
 import { useBoardProvider } from '../BoardContext'
 

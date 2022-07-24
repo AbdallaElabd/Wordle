@@ -3,6 +3,7 @@ import { AppType } from 'next/dist/shared/lib/utils'
 import { AppRouter } from './api/trpc/[trpc]'
 import { GlobalStyle } from './styles/GlobalStyles'
 
+// eslint-disable-next-line react/prop-types
 const MyApp: AppType = ({ Component, pageProps }) => (
   <>
     <Component {...pageProps} />
@@ -11,7 +12,7 @@ const MyApp: AppType = ({ Component, pageProps }) => (
 )
 
 export default withTRPC<AppRouter>({
-  config({ ctx }) {
+  config() {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr

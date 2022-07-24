@@ -8,4 +8,6 @@ const DynamicComponentWithNoSSR = dynamic(
   }
 )
 
-export default () => <DynamicComponentWithNoSSR />
+const AppNoSSR = () => <DynamicComponentWithNoSSR />
+
+export default AppNoSSR
