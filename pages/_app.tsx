@@ -1,5 +1,6 @@
 import { withTRPC } from '@trpc/next'
 import { AppType } from 'next/dist/shared/lib/utils'
+
 import { AppRouter } from './api/trpc/[trpc]'
 import { GlobalStyle } from './styles/GlobalStyles'
 
@@ -7,6 +8,12 @@ import { GlobalStyle } from './styles/GlobalStyles'
 const MyApp: AppType = ({ Component, pageProps }) => (
   <>
     <Component {...pageProps} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <GlobalStyle />
   </>
 )

@@ -1,8 +1,9 @@
-import { z } from 'zod'
 import { router, TRPCError } from '@trpc/server'
-import { Context } from '../context'
 import { createGame, getGame } from 'pages/utils/wordle/game'
 import { submitGuess } from 'pages/utils/wordle/guess'
+import { z } from 'zod'
+
+import { Context } from '../context'
 
 const gameRouter = router<Context>()
   .query('startGame', {

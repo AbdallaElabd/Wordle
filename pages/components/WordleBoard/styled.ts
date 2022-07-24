@@ -3,7 +3,9 @@ import styled from '@emotion/styled'
 import { theme } from 'pages/styles'
 import { TileStatus } from 'pages/types/board'
 
-const tileSpacing = theme.spacing[4]
+import { getTileColorFromStatus } from '../utils'
+
+const tileSpacing = theme.spacing[3]
 
 export const Container = styled.div`
   display: flex;
@@ -19,7 +21,9 @@ export const Row = styled.div`
 `
 
 export const Tile = styled.div<{ status: TileStatus }>`
-  font-weight: bold;
+  font-family: ${theme.fonts.body};
+  font-weight: 700;
+  font-size: 1.8rem;
   width: 4rem;
   height: 4rem;
   text-transform: capitalize;
@@ -28,14 +32,7 @@ export const Tile = styled.div<{ status: TileStatus }>`
   justify-content: center;
 
   ${({ status }) => {
-    const colors =
-      {
-        [TileStatus.CorrectPlace]: theme.colors.success,
-        [TileStatus.WrongPlace]: theme.colors.warning,
-        [TileStatus.NotInWord]: theme.colors.neutral,
-        [TileStatus.NoGuess]: theme.colors.background
-      }[status] ?? theme.colors.background
-
+    const colors = getTileColorFromStatus(status)
     return css`
       background-color: ${colors.background};
       color: ${colors.foreground};

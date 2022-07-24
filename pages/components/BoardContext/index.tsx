@@ -86,7 +86,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         gameId: window.localStorage.getItem('gameId') as string,
         guess
       }),
-    []
+    [mutateSubmitGuess]
   )
 
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
@@ -105,7 +105,9 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     (event) =>
       event.code.match(/Key[A-Z]/) != null &&
       event.key.match(/([a-z]|(A-Z))/) != null,
-    ({ key }) => onKeyPress(key)
+    ({ key }) => onKeyPress(key),
+    undefined,
+    [onKeyPress]
   )
 
   const onBackspace = useCallback(() => {
@@ -115,14 +117,14 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     }
   }, [boardStatus, guess])
 
-  useKey('Backspace', onBackspace, undefined, [guess])
+  useKey('Backspace', onBackspace, undefined, [onBackspace])
 
   const onEnter = useCallback(() => {
     if (boardStatus !== BoardStatus.InProgress) return
     submitGuess(guess)
-  }, [boardStatus, guess])
+  }, [boardStatus, guess, submitGuess])
 
-  useKey('Enter', onEnter, undefined)
+  useKey('Enter', onEnter, undefined, [onEnter])
 
   return (
     <BoardContext.Provider

@@ -1,3 +1,4 @@
+import { produce } from 'immer'
 import {
   Board,
   BoardRow,
@@ -6,7 +7,6 @@ import {
   Character,
   TileStatus
 } from 'pages/types/board'
-import { produce } from 'immer'
 
 export const createEmptyBoard = (): Board => {
   const rows = Array<BoardTile>(5).fill(['', TileStatus.NoGuess])
@@ -38,9 +38,9 @@ export const getBoardWithCurrentGuess = (
 export const getBoardStatus = (board: Board): BoardStatus => {
   // Last row is solved
   if (
-    board
-      .at(board.length - 1)
-      ?.every(([, status]) => status === TileStatus.CorrectPlace)
+    board.some((row) =>
+      row.every(([, status]) => status === TileStatus.CorrectPlace)
+    )
   ) {
     return BoardStatus.Solved
   }

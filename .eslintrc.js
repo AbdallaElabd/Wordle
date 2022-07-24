@@ -4,7 +4,12 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: ['plugin:react/recommended', 'standard', 'plugin:jest/recommended'],
+  extends: [
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'standard',
+    'plugin:jest/recommended'
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -13,7 +18,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
   settings: {
     react: {
       version: 'detect'
@@ -25,13 +30,17 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error'],
 
     // Jest
-    // 'jest/no-disabled-tests': 'warn',
-    // 'jest/no-focused-tests': 'error',
-    // 'jest/no-identical-title': 'error',
-    // 'jest/prefer-to-have-length': 'warn',
-    // 'jest/valid-expect': 'error',
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
 
     // React
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+
+    // Import sorting
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error'
   }
 }

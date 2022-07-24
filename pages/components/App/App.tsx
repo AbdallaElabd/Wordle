@@ -1,9 +1,10 @@
 import { WordleBoard } from 'pages/components/WordleBoard'
-import { Container } from './styled'
-import { Header } from '../Header'
-import { VirtualKeyboard } from '../VirtualKeyboard'
+
 import { BoardProvider } from '../BoardContext'
 import { Error } from '../Error'
+import { Header } from '../Header'
+import { VirtualKeyboard } from '../VirtualKeyboard'
+import { Container } from './styled'
 
 export function App() {
   return (

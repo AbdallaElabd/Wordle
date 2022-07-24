@@ -1,4 +1,5 @@
 import { BoardStatus } from 'pages/types/board'
+
 import { createEmptyBoard, getBoardStatus } from './board'
 import db from './db'
 import { getRandomTargetWord } from './word'
@@ -7,6 +8,8 @@ export const getGame = (id: string) => {
   const { game } = db.getEntry(id)
 
   if (!game?.board) return undefined
+
+  console.log(getBoardStatus(game.board))
 
   return {
     id,

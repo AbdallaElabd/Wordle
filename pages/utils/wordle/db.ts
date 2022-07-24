@@ -1,6 +1,6 @@
-import { v4 as uuid } from 'uuid'
 import fs from 'fs'
 import { Board } from 'pages/types/board'
+import { v4 as uuid } from 'uuid'
 
 const path = 'db.json'
 

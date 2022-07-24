@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import produce from 'immer'
 import { BoardRow, Character, TileStatus } from 'pages/types/board'
+
 import { getBoardStatus, isRowEmpty } from './board'
 import db from './db'
 import { isWordInList } from './word'

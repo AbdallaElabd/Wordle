@@ -1,5 +1,5 @@
-import { Container, Row, Tile } from './styled'
 import { useBoardProvider } from '../BoardContext'
+import { Container, Row, Tile } from './styled'
 
 export function WordleBoard() {
   const { boardWithCurrentGuess } = useBoardProvider()

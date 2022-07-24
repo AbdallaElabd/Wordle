@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { theme } from 'pages/styles'
+
 // import { useEffect, useState } from 'react'
 import { useBoardProvider } from '../BoardContext'
 

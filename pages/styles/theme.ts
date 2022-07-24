@@ -27,9 +27,14 @@ export const themeValues = {
   spacing: {
     1: '0.125rem',
     2: '0.25rem',
+    3: '0.357rem',
     4: '0.5rem',
     8: '1rem',
     16: '2rem'
+  },
+  fonts: {
+    header: "'Oswald'",
+    body: "'Open Sans'"
   }
 } as const
 
