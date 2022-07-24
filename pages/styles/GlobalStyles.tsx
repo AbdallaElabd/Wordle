@@ -1,7 +1,7 @@
-import { css, Global } from '@emotion/react';
+import { css, Global } from '@emotion/react'
 
-import { generateCssVariables } from './utils';
-import { theme, themeValues } from './theme';
+import { generateCssVariables } from './utils'
+import { theme, themeValues } from './theme'
 
 export function GlobalStyle() {
   return (
@@ -51,5 +51,5 @@ export function GlobalStyle() {
         }
       `}
     />
-  );
+  )
 }

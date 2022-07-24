@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import { theme } from 'pages/styles';
+import styled from '@emotion/styled'
+import { theme } from 'pages/styles'
 
 export const Container = styled.div`
   display: flex;
@@ -8,4 +8,5 @@ export const Container = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${theme.colors.background};
-`;
+  padding: 2rem;
+`

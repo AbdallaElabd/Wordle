@@ -1,8 +1,8 @@
-import { isWordInList } from './word';
+import { isWordInList } from './word'
 
 describe('word', () => {
   it('should check if word is in list', () => {
-    expect(isWordInList('aaaaa')).toBe(false);
-    expect(isWordInList('crown')).toBe(true);
-  });
-});
+    expect(isWordInList('aaaaa')).toBe(false)
+    expect(isWordInList('crown')).toBe(true)
+  })
+})

@@ -1,23 +1,23 @@
-import { type Theme } from './theme';
+import { type Theme } from './theme'
 
 export const generateCssVariables = (theme: Theme, prefix = ''): string[] =>
   Object.entries(theme).reduce<string[]>((cssVariables, [key, value]) => {
     if (typeof value === 'object') {
       return [
         ...cssVariables,
-        ...generateCssVariables(value as unknown as Theme, `${prefix}${key}-`),
-      ];
+        ...generateCssVariables(value as unknown as Theme, `${prefix}${key}-`)
+      ]
     }
-    return [...cssVariables, `--${prefix}${key}: ${value};`];
-  }, []);
+    return [...cssVariables, `--${prefix}${key}: ${value};`]
+  }, [])
 
 type NestedObject = {
-  [key: string]: string | NestedObject;
-};
+  [key: string]: string | NestedObject
+}
 
 export const generateCssGetters = (
   theme: NestedObject,
-  prefix = '',
+  prefix = ''
 ): NestedObject =>
   Object.entries(theme).reduce<NestedObject>(
     (gettersObject, [key, value]) => ({
@@ -25,7 +25,7 @@ export const generateCssGetters = (
       [key]:
         typeof value === 'string'
           ? `var(--${prefix}${key})`
-          : generateCssGetters(value, `${prefix}${key}-`),
+          : generateCssGetters(value, `${prefix}${key}-`)
     }),
-    {},
-  );
+    {}
+  )

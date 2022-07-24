@@ -25,23 +25,23 @@ export type Character =
   | 'w'
   | 'x'
   | 'y'
-  | 'z';
+  | 'z'
 
 export enum TileStatus {
   CorrectPlace = '🟩',
   WrongPlace = '🟨',
   NotInWord = '⬜️',
-  NoGuess = '',
+  NoGuess = ''
 }
 
-export type BoardTile = [Character, TileStatus];
+export type BoardTile = [Character, TileStatus]
 
-export type BoardRow = BoardTile[];
+export type BoardRow = BoardTile[]
 
-export type Board = BoardRow[];
+export type Board = BoardRow[]
 
 export enum BoardStatus {
   Solved = 'solved',
   InProgress = 'in-progress',
-  Failed = 'failed',
+  Failed = 'failed'
 }

@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
-import { theme } from 'pages/styles';
-import { useEffect, useState } from 'react';
-import { useBoardProvider } from '../BoardContext';
+import { css } from '@emotion/react'
+import { theme } from 'pages/styles'
+// import { useEffect, useState } from 'react'
+import { useBoardProvider } from '../BoardContext'
 
 export const Error = () => {
-  const { error, setError } = useBoardProvider();
+  const { error } = useBoardProvider()
 
   // useEffect(() => {
   //   const timeoutId = setTimeout(() => {
@@ -38,5 +38,5 @@ export const Error = () => {
         {error}
       </span>
     </div>
-  );
-};
+  )
+}

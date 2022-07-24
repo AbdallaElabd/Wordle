@@ -1,27 +1,27 @@
-import { Board, BoardStatus } from 'pages/types/board';
-import { createEmptyBoard, getBoardStatus } from './board';
-import db from './db';
-import { getRandomTargetWord } from './word';
+import { BoardStatus } from 'pages/types/board'
+import { createEmptyBoard, getBoardStatus } from './board'
+import db from './db'
+import { getRandomTargetWord } from './word'
 
 export const getGame = (id: string) => {
-  const { game } = db.getEntry(id);
+  const { game } = db.getEntry(id)
 
-  if (!game?.board) return undefined;
+  if (!game?.board) return undefined
 
   return {
     id,
     board: game.board,
-    boardStatus: getBoardStatus(game.board),
-  };
-};
+    boardStatus: getBoardStatus(game.board)
+  }
+}
 
 export const createGame = () => {
-  const board = createEmptyBoard();
-  const solution = getRandomTargetWord();
-  const id = db.addEntry(board, solution);
-  return { id, board, boardStatus: BoardStatus.InProgress };
-};
+  const board = createEmptyBoard()
+  const solution = getRandomTargetWord()
+  const id = db.addEntry(board, solution)
+  return { id, board, boardStatus: BoardStatus.InProgress }
+}
 
 export const deleteGame = (id: string) => {
-  db.deleteEntry(id);
-};
+  db.deleteEntry(id)
+}
