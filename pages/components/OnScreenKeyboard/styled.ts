@@ -40,19 +40,17 @@ export const StyledKey = styled.span<StyledKeyProps>`
   cursor: ${({ disabled }) => (disabled ? '' : 'pointer')};
   user-select: none;
 
-  ${({ status = TileStatus.NoGuess, isKeyboardRevealed }) => {
+  ${({ status = TileStatus.NoGuess }) => {
     const noGuessColors = {
       background: theme.colors.dimmed,
       foreground: '#fff'
     }
-    const colors = !isKeyboardRevealed
-      ? noGuessColors
-      : {
-          [TileStatus.CorrectPlace]: theme.colors.guesses.correctPlace,
-          [TileStatus.WrongPlace]: theme.colors.guesses.wrongPlace,
-          [TileStatus.NotInWord]: theme.colors.guesses.notInWord,
-          [TileStatus.NoGuess]: noGuessColors
-        }[status]
+    const colors = {
+      [TileStatus.CorrectPlace]: theme.colors.guesses.correctPlace,
+      [TileStatus.WrongPlace]: theme.colors.guesses.wrongPlace,
+      [TileStatus.NotInWord]: theme.colors.guesses.notInWord,
+      [TileStatus.NoGuess]: noGuessColors
+    }[status]
 
     return css`
       transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;

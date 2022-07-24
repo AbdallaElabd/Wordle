@@ -7,7 +7,7 @@ import { useToastListener } from '../ToastProvider'
 import { Container, Row, Tile, TileContainer } from './styled'
 
 export function WordleBoard() {
-  const { board, boardWithCurrentGuess, revealKeyboard } = useBoardProvider()
+  const { board, boardWithCurrentGuess, onRowRevealed } = useBoardProvider()
   const [hasError, setHasError] = useState(false)
 
   // When a toast is added, trigger the shake animation
@@ -54,10 +54,9 @@ export function WordleBoard() {
                     flipAnimation={!isEmptyRow}
                     tileIndex={tileIndex}
                     onAnimationEnd={() => {
-                      // Only after the last tile is revealed
-                      if (tileIndex === row.length - 1) {
-                        revealKeyboard()
-                      }
+                      // When the last tile is revealed, that means
+                      // that the entire row is revealed.
+                      if (tileIndex === row.length - 1) onRowRevealed(rowIndex)
                     }}
                   >
                     {char}

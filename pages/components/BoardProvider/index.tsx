@@ -6,9 +6,10 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useMemo,
   useState
 } from 'react'
-import { useKey } from 'react-use'
+import { useKey, useSet } from 'react-use'
 
 import { useToastProvider } from '../ToastProvider'
 
@@ -24,8 +25,8 @@ type BoardContextType = {
   onBackspace: () => void
   onEnter: () => void
   onKeyPress: (key: string) => void
-  isKeyboardRevealed: boolean
-  revealKeyboard: () => void
+  revealedRows: Set<number>
+  onRowRevealed: (rowIndex: number) => void
 }
 
 export const BoardContext = createContext<BoardContextType>({
@@ -40,8 +41,8 @@ export const BoardContext = createContext<BoardContextType>({
   onBackspace: () => {},
   onEnter: () => {},
   onKeyPress: () => {},
-  isKeyboardRevealed: false,
-  revealKeyboard: () => {}
+  revealedRows: new Set(),
+  onRowRevealed: () => {}
 })
 
 export const useBoardProvider = () => useContext(BoardContext)
@@ -57,8 +58,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   )
   const [guess, setGuess] = useState<string>('')
 
-  const [isKeyboardRevealed, setIsKeyboardRevealed] = useState(false)
-  const revealKeyboard = useCallback(() => setIsKeyboardRevealed(true), [])
+  const [revealedRows, { add: addRevealedRow }] = useSet<number>(new Set())
 
   trpc.useQuery(['game.startGame', { gameId: id }], {
     refetchOnWindowFocus: false,
@@ -129,25 +129,37 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   useKey('Enter', onEnter, undefined, [onEnter])
 
-  return (
-    <BoardContext.Provider
-      value={{
-        id,
-        board,
-        boardStatus,
-        boardWithCurrentGuess,
-        guess,
-        setGuess,
-        submitGuess,
-        isSubmittingGuess,
-        onBackspace,
-        onEnter,
-        onKeyPress,
-        isKeyboardRevealed,
-        revealKeyboard
-      }}
-    >
-      {children}
-    </BoardContext.Provider>
+  const value = useMemo(
+    () => ({
+      id,
+      board,
+      boardStatus,
+      boardWithCurrentGuess,
+      guess,
+      setGuess,
+      submitGuess,
+      isSubmittingGuess,
+      onBackspace,
+      onEnter,
+      onKeyPress,
+      revealedRows,
+      onRowRevealed: addRevealedRow
+    }),
+    [
+      board,
+      boardStatus,
+      boardWithCurrentGuess,
+      guess,
+      id,
+      isSubmittingGuess,
+      onBackspace,
+      onEnter,
+      onKeyPress,
+      addRevealedRow,
+      revealedRows,
+      submitGuess
+    ]
   )
+
+  return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>
 }

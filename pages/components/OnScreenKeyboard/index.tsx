@@ -1,8 +1,8 @@
-import { BoardStatus } from 'pages/types/board'
+import { BoardStatus, TileStatus } from 'pages/types/board'
+import { getTileStatus } from 'pages/utils/wordle/tile'
 
 import { useBoardProvider } from '../BoardProvider'
 import { Backspace } from './Backspace'
-import { OnScreenKey } from './OnScreenKey'
 import { Container, Row, StyledKey } from './styled'
 
 const keyboardLayout = [
@@ -12,7 +12,8 @@ const keyboardLayout = [
 ] as const
 
 export const OnScreenKeyboard = () => {
-  const { boardStatus, onKeyPress, onBackspace, onEnter } = useBoardProvider()
+  const { board, revealedRows, boardStatus, onKeyPress, onBackspace, onEnter } =
+    useBoardProvider()
 
   const disabled = boardStatus !== BoardStatus.InProgress
 
@@ -47,13 +48,22 @@ export const OnScreenKeyboard = () => {
               )
             }
 
+            const keyStatus = !board
+              ? TileStatus.NoGuess
+              : getTileStatus(
+                  key,
+                  board.filter((row, index) => revealedRows.has(index))
+                )
+
             return (
-              <OnScreenKey
+              <StyledKey
                 key={key}
-                character={key}
-                onKeyPress={onKeyPress}
+                onClick={() => onKeyPress(key)}
+                status={keyStatus}
                 disabled={disabled}
-              />
+              >
+                {key}
+              </StyledKey>
             )
           })}
         </Row>
