@@ -41,7 +41,7 @@ export const submitGuess = (guess: string, gameId: string) => {
   if (!isWordInList(guess)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'Word is not the list.'
+      message: 'Word is not the list'
     })
   }
 

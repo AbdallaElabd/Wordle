@@ -24,6 +24,8 @@ type BoardContextType = {
   onBackspace: () => void
   onEnter: () => void
   onKeyPress: (key: string) => void
+  isKeyboardRevealed: boolean
+  revealKeyboard: () => void
 }
 
 export const BoardContext = createContext<BoardContextType>({
@@ -37,7 +39,9 @@ export const BoardContext = createContext<BoardContextType>({
   isSubmittingGuess: false,
   onBackspace: () => {},
   onEnter: () => {},
-  onKeyPress: () => {}
+  onKeyPress: () => {},
+  isKeyboardRevealed: false,
+  revealKeyboard: () => {}
 })
 
 export const useBoardProvider = () => useContext(BoardContext)
@@ -52,6 +56,9 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     BoardStatus.InProgress
   )
   const [guess, setGuess] = useState<string>('')
+
+  const [isKeyboardRevealed, setIsKeyboardRevealed] = useState(false)
+  const revealKeyboard = useCallback(() => setIsKeyboardRevealed(true), [])
 
   trpc.useQuery(['game.startGame', { gameId: id }], {
     refetchOnWindowFocus: false,
@@ -135,7 +142,9 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         isSubmittingGuess,
         onBackspace,
         onEnter,
-        onKeyPress
+        onKeyPress,
+        isKeyboardRevealed,
+        revealKeyboard
       }}
     >
       {children}

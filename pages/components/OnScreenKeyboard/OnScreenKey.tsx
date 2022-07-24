@@ -16,7 +16,7 @@ export const OnScreenKey: FC<OnScreenKeyProps> = ({
   onKeyPress,
   disabled
 }) => {
-  const { board } = useBoardProvider()
+  const { board, isKeyboardRevealed } = useBoardProvider()
 
   const status = !board ? TileStatus.NoGuess : getTileStatus(character, board)
 
@@ -25,6 +25,7 @@ export const OnScreenKey: FC<OnScreenKeyProps> = ({
       onClick={() => onKeyPress(character)}
       status={status}
       disabled={disabled}
+      isKeyboardRevealed={isKeyboardRevealed}
     >
       {character}
     </StyledKey>

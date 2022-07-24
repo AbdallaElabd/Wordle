@@ -9,8 +9,6 @@ export const getGame = (id: string) => {
 
   if (!game?.board) return undefined
 
-  console.log(getBoardStatus(game.board))
-
   return {
     id,
     board: game.board,

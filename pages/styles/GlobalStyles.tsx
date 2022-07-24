@@ -10,6 +10,10 @@ export function GlobalStyle() {
         :root {
           ${generateCssVariables(themeValues).join('')};
           font-size: 16px;
+
+          @media screen and (max-width: 400px) {
+            font-size: 14px;
+          }
         }
         html,
         body {
@@ -17,13 +21,8 @@ export function GlobalStyle() {
           font-family: ${theme.fonts.body}, Sans-Serif;
           padding: 0;
           margin: 0;
-          background-color: ${theme.colors.background.background};
-          color: ${theme.colors.background.foreground};
-          /**
-            * Fluid Typography
-            * @see https://clamp.font-size.app/?config=eyJyb290IjoiMTYiLCJtaW5XaWR0aCI6IjMyMHB4IiwibWF4V2lkdGgiOiIxMjAwcHgiLCJtaW5Gb250U2l6ZSI6IjE2cHgiLCJtYXhGb250U2l6ZSI6IjM2cHgifQ%3D%3D
-            */
-          /* font-size: clamp(1.6rem, 0.5rem + 2vw, 2.25rem); */
+          background-color: ${theme.colors.background};
+          color: ${theme.colors.foreground};
         }
 
         a {

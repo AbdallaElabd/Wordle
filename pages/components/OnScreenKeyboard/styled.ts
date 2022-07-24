@@ -23,6 +23,7 @@ interface StyledKeyProps {
   width?: string
   status?: TileStatus
   disabled: boolean
+  isKeyboardRevealed?: boolean
 }
 
 export const StyledKey = styled.span<StyledKeyProps>`
@@ -39,14 +40,19 @@ export const StyledKey = styled.span<StyledKeyProps>`
   cursor: ${({ disabled }) => (disabled ? '' : 'pointer')};
   user-select: none;
 
-  ${({ status = TileStatus.NoGuess }) => {
-    const colors =
-      {
-        [TileStatus.CorrectPlace]: theme.colors.success,
-        [TileStatus.WrongPlace]: theme.colors.warning,
-        [TileStatus.NotInWord]: theme.colors.neutral,
-        [TileStatus.NoGuess]: { background: '#818384', foreground: '#fff' }
-      }[status] ?? theme.colors.background
+  ${({ status = TileStatus.NoGuess, isKeyboardRevealed }) => {
+    const noGuessColors = {
+      background: theme.colors.dimmed,
+      foreground: '#fff'
+    }
+    const colors = !isKeyboardRevealed
+      ? noGuessColors
+      : {
+          [TileStatus.CorrectPlace]: theme.colors.guesses.correctPlace,
+          [TileStatus.WrongPlace]: theme.colors.guesses.wrongPlace,
+          [TileStatus.NotInWord]: theme.colors.guesses.notInWord,
+          [TileStatus.NoGuess]: noGuessColors
+        }[status]
 
     return css`
       transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;

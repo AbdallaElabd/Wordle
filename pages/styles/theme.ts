@@ -2,11 +2,31 @@ import { generateCssGetters } from './utils'
 
 export const themeValues = {
   colors: {
-    success: { background: '#28a745', foreground: '#fff' },
-    warning: { background: '#ffc107', foreground: '#fff' },
-    neutral: { background: '#3a3a3c', foreground: '#fff' },
-    surface: { background: '#e2e2e2', foreground: '#000' },
-    background: { background: '#121213', foreground: '#fff' }
+    background: '#121213',
+    foreground: '#fff',
+    dimmed: '#818384',
+    guesses: {
+      correctPlace: {
+        background: '#28a745',
+        foreground: '#fff',
+        border: '#28a745'
+      },
+      wrongPlace: {
+        background: '#ffc107',
+        foreground: '#fff',
+        border: '#ffc107'
+      },
+      notInWord: {
+        background: '#3a3a3c',
+        foreground: '#fff',
+        border: '#3a3a3c'
+      },
+      noGuess: {
+        background: '#121213',
+        foreground: '#fff',
+        border: '#3a3a3c'
+      }
+    }
   },
   fonts: {
     header: "'Oswald'",

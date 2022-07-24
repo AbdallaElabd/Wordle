@@ -6,7 +6,7 @@ export const Backspace = () => (
     height="24"
     viewBox="0 0 24 24"
     width="24"
-    color={theme.colors.neutral.foreground}
+    color={theme.colors.foreground}
   >
     <path
       fill="currentColor"

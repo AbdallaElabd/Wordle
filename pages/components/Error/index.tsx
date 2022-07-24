@@ -37,8 +37,8 @@ export const Error = () => {
               padding: 0.75rem;
               animation: ${animations.fadeIn} 0.3s ease-in;
               font-size: 1.2rem;
-              background-color: ${theme.colors.surface.background};
-              color: ${theme.colors.surface.foreground};
+              background-color: ${theme.colors.dimmed};
+              color: ${theme.colors.foreground};
               border-radius: 0.25rem;
               z-index: 1;
               font-weight: 700;
