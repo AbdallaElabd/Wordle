@@ -10,6 +10,8 @@ import {
 } from 'react'
 import { useKey } from 'react-use'
 
+import { useToastProvider } from '../ToastProvider'
+
 type BoardContextType = {
   board: Board | null
   boardWithCurrentGuess: Board | null
@@ -19,8 +21,6 @@ type BoardContextType = {
   setGuess: (guess: string) => void
   submitGuess: (guess: string) => void
   isSubmittingGuess: boolean
-  error: string | null
-  setError: (error: string | null) => void
   onBackspace: () => void
   onEnter: () => void
   onKeyPress: (key: string) => void
@@ -35,8 +35,6 @@ export const BoardContext = createContext<BoardContextType>({
   setGuess: () => {},
   submitGuess: () => {},
   isSubmittingGuess: false,
-  error: null,
-  setError: () => {},
   onBackspace: () => {},
   onEnter: () => {},
   onKeyPress: () => {}
@@ -45,6 +43,7 @@ export const BoardContext = createContext<BoardContextType>({
 export const useBoardProvider = () => useContext(BoardContext)
 
 export const BoardProvider = ({ children }: PropsWithChildren) => {
+  const { addToast } = useToastProvider()
   const [id, setId] = useState<string | null>(
     window.localStorage.getItem('gameId')
   )
@@ -53,7 +52,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     BoardStatus.InProgress
   )
   const [guess, setGuess] = useState<string>('')
-  const [error, setError] = useState<string | null>(null)
 
   trpc.useQuery(['game.startGame', { gameId: id }], {
     refetchOnWindowFocus: false,
@@ -73,10 +71,9 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         setBoard(newBoard)
         setBoardStatus(boardStatus)
         setGuess('')
-        setError(null)
       },
       onError: (error) => {
-        setError(error.message)
+        addToast(error.message)
       }
     })
 
@@ -104,7 +101,8 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   useKey(
     (event) =>
       event.code.match(/Key[A-Z]/) != null &&
-      event.key.match(/([a-z]|(A-Z))/) != null,
+      event.key.match(/([a-z]|(A-Z))/) != null &&
+      !event.metaKey,
     ({ key }) => onKeyPress(key),
     undefined,
     [onKeyPress]
@@ -112,9 +110,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const onBackspace = useCallback(() => {
     if (boardStatus !== BoardStatus.InProgress) return
-    if (guess.length <= 5 && guess.length > 0) {
-      setGuess(guess.slice(0, guess.length - 1))
-    }
+    setGuess(guess.slice(0, guess.length - 1))
   }, [boardStatus, guess])
 
   useKey('Backspace', onBackspace, undefined, [onBackspace])
@@ -139,9 +135,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         isSubmittingGuess,
         onBackspace,
         onEnter,
-        onKeyPress,
-        error,
-        setError
+        onKeyPress
       }}
     >
       {children}

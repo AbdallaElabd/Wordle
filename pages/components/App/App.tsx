@@ -1,20 +1,23 @@
 import { WordleBoard } from 'pages/components/WordleBoard'
 
-import { BoardProvider } from '../BoardContext'
+import { BoardProvider } from '../BoardProvider'
 import { Error } from '../Error'
 import { Header } from '../Header'
-import { VirtualKeyboard } from '../VirtualKeyboard'
+import { OnScreenKeyboard } from '../OnScreenKeyboard'
+import { ToastProvider } from '../ToastProvider'
 import { Container } from './styled'
 
 export function App() {
   return (
-    <BoardProvider>
-      <Container>
-        <Header />
-        <Error />
-        <WordleBoard />
-        <VirtualKeyboard />
-      </Container>
-    </BoardProvider>
+    <ToastProvider>
+      <BoardProvider>
+        <Container>
+          <Header />
+          <Error />
+          <WordleBoard />
+          <OnScreenKeyboard />
+        </Container>
+      </BoardProvider>
+    </ToastProvider>
   )
 }

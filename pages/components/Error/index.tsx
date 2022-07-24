@@ -1,43 +1,53 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { theme } from 'pages/styles'
+import { animations } from 'pages/styles/animations'
 
-// import { useEffect, useState } from 'react'
-import { useBoardProvider } from '../BoardContext'
+import { useToastProvider } from '../ToastProvider'
 
 export const Error = () => {
-  const { error } = useBoardProvider()
-
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     setError(null);
-  //   }, 2000);
-  //   return () => clearTimeout(timeoutId);
-  // }, [error]);
-
-  // console.log({ error });
+  const { toasts } = useToastProvider()
 
   return (
     <div
       css={css`
         display: relative;
-        width: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 1rem 0;
       `}
     >
-      <span
+      <div
         css={css`
-          display: ${error ? 'display' : 'none'};
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          justify-content: center;
           position: absolute;
-          padding: 0.75rem;
-          font-size: 1.2rem;
-          background-color: ${theme.colors.neutral.background};
-          border-radius: 0.5rem;
         `}
       >
-        {error}
-      </span>
+        {toasts.map((toast) => (
+          <span
+            key={toast.id}
+            css={css`
+              transition: opacity 0.3s ease-in-out;
+              opacity: ${toast ? 1 : 0};
+              padding: 0.75rem;
+              animation: ${animations.fadeIn} 0.3s ease-in;
+              font-size: 1.2rem;
+              background-color: ${theme.colors.surface.background};
+              color: ${theme.colors.surface.foreground};
+              border-radius: 0.25rem;
+              z-index: 1;
+              font-weight: 700;
+            `}
+          >
+            {toast.error}
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
