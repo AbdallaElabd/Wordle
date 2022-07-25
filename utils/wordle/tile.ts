@@ -1,9 +1,9 @@
-import { Board, Character, TileStatus } from 'types/board'
+import { Board, Letter, TileStatus } from 'types/board'
 
-export const getTileStatus = (character: Character, board: Board) => {
+export const getTileStatus = (Letter: Letter, board: Board) => {
   const allStatuses = board
     .flatMap((row) => row)
-    .filter(([tileCharacter]) => tileCharacter === character)
+    .filter(([tileLetter]) => tileLetter === Letter)
     .map(([, tileStatus]) => tileStatus)
 
   if (allStatuses.includes(TileStatus.CorrectPlace)) {

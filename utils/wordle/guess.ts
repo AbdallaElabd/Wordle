@@ -1,24 +1,21 @@
 import { TRPCError } from '@trpc/server'
 import db from 'db'
 import produce from 'immer'
-import { BoardRow, Character, TileStatus } from 'types/board'
+import { BoardRow, Letter, TileStatus } from 'types/board'
 
 import { getBoardStatus, isRowEmpty } from './board'
 import { isWordInList } from './word'
 
 export const validateGuess = (guess: string, solution: string) => {
-  return (guess.split('') as Character[]).reduce<BoardRow>(
-    (acc, char, index) => {
-      if (solution[index] === char) {
-        return [...acc, [char, TileStatus.CorrectPlace]]
-      }
-      if (solution.includes(char)) {
-        return [...acc, [char, TileStatus.WrongPlace]]
-      }
-      return [...acc, [char, TileStatus.NotInWord]]
-    },
-    []
-  )
+  return (guess.split('') as Letter[]).reduce<BoardRow>((acc, char, index) => {
+    if (solution[index] === char) {
+      return [...acc, [char, TileStatus.CorrectPlace]]
+    }
+    if (solution.includes(char)) {
+      return [...acc, [char, TileStatus.WrongPlace]]
+    }
+    return [...acc, [char, TileStatus.NotInWord]]
+  }, [])
 }
 
 export const submitGuess = (guess: string, gameId: string) => {

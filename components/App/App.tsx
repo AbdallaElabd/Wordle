@@ -14,9 +14,9 @@ export function App() {
       <BoardProvider>
         <Container>
           <Header />
+          <Error />
           <WordleBoard />
           <OnScreenKeyboard />
-          <Error />
           <GameResult />
         </Container>
       </BoardProvider>

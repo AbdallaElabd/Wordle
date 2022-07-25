@@ -1,4 +1,4 @@
-export type Character =
+export type Letter =
   | ''
   | 'a'
   | 'b'
@@ -34,7 +34,7 @@ export enum TileStatus {
   NoGuess = ''
 }
 
-export type BoardTile = [Character, TileStatus]
+export type BoardTile = [Letter, TileStatus]
 
 export type BoardRow = BoardTile[]
 

@@ -4,7 +4,7 @@ import {
   BoardRow,
   BoardStatus,
   BoardTile,
-  Character,
+  Letter,
   TileStatus
 } from 'types/board'
 
@@ -30,10 +30,14 @@ export const getBoardWithCurrentGuess = (
         .split('')
         .map((char) => {
           if (char === ' ') return ['', TileStatus.NoGuess]
-          return [char as Character, TileStatus.NoGuess]
+          return [char as Letter, TileStatus.NoGuess]
         })
     }
   })
+
+export const flatMapBoardTiles = (board: Board) => {
+  return board.flatMap((row) => row)
+}
 
 export const getBoardStatus = (board: Board): BoardStatus => {
   // A row is solved

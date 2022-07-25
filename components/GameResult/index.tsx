@@ -1,15 +1,38 @@
+import { Close } from 'components/SVG/Close'
+import { useRef, useState } from 'react'
+import { useClickAway } from 'react-use'
 import { BoardStatus } from 'types/board'
 
 import { useBoardProvider } from '../BoardProvider'
-import { Container } from './styled'
+import { Failed } from './Failed'
+import { Solved } from './Solved'
+import { Backdrop, CloseIcon, Container } from './styled'
 
 export const GameResult = () => {
-  const { finalAnimationDone, boardStatus } = useBoardProvider()
+  const { finalAnimationDone, finalBoardStatus } = useBoardProvider()
 
-  if (!finalAnimationDone) return null
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
-  if (boardStatus === BoardStatus.Solved) return <Container>Solved</Container>
-  if (boardStatus === BoardStatus.Failed) return <Container>Failed</Container>
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  return null
+  useClickAway(containerRef, () => {
+    if (!finalAnimationDone) return
+    setIsModalOpen(false)
+  })
+
+  if (finalBoardStatus === BoardStatus.InProgress) return null
+
+  if (!finalAnimationDone || !isModalOpen) return null
+
+  return (
+    <>
+      <Backdrop />
+      <Container ref={containerRef}>
+        <CloseIcon onClick={() => setIsModalOpen(false)}>
+          <Close />
+        </CloseIcon>
+        {finalBoardStatus === BoardStatus.Solved ? <Solved /> : <Failed />}
+      </Container>
+    </>
+  )
 }

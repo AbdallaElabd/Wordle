@@ -51,7 +51,8 @@ export function WordleBoard() {
           <Row
             key={rowIndex}
             onAnimationEnd={() => {
-              // When the toast is removed, remove the css animation so that it can be triggered again
+              // When the shake animation is done, remove the css animation
+              // property so that it can be triggered again.
               if (isCurrentGuessRow) {
                 setHasError(false)
               }
@@ -66,7 +67,10 @@ export function WordleBoard() {
                 board.findIndex((boardRow) => isRowEmpty(boardRow)) - 1
 
               return (
-                <ZoomShakeAnimation key={tileIndex} animate={char !== ''}>
+                <ZoomShakeAnimation
+                  key={tileIndex}
+                  animate={isCurrentGuessRow && char !== ''}
+                >
                   <SolvedBounceAnimation
                     tileIndex={tileIndex}
                     animate={
