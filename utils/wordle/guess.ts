@@ -19,6 +19,13 @@ export const validateGuess = (guess: string, solution: string) => {
 }
 
 export const submitGuess = async (guess: string, gameId: string) => {
+  if (!isWordInList(guess)) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Word is not the list'
+    })
+  }
+
   const game = await gameDb.getGame(gameId)
 
   if (!game) {
@@ -28,17 +35,10 @@ export const submitGuess = async (guess: string, gameId: string) => {
     })
   }
 
-  if (game.board.every((row) => !isRowEmpty(row))) {
+  if (getBoardStatus(game.board) !== BoardStatus.InProgress) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Tried submitting a guess for a completed game.'
-    })
-  }
-
-  if (!isWordInList(guess)) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Word is not the list'
     })
   }
 
@@ -54,7 +54,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
     }
   })
 
-  gameDb.updateGame(gameId, newBoard)
+  await gameDb.updateGame(gameId, newBoard)
 
   const boardStatus = getBoardStatus(newBoard)
 

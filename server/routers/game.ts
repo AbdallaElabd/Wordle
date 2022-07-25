@@ -35,14 +35,14 @@ const gameRouter = createRouter()
       guess: z.string(),
       gameId: z.string()
     }),
-    resolve({ input }) {
+    async resolve({ input }) {
       if (input.guess.length < 5) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Not enough letters'
         })
       }
-      return submitGuess(input.guess, input.gameId)
+      return await submitGuess(input.guess, input.gameId)
     }
   })
 
