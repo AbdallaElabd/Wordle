@@ -9,6 +9,6 @@ generator client {
 
 model Game {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
-  solution String @unique
+  solution String
   board    Json
 }
