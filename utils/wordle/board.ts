@@ -51,7 +51,7 @@ export const getBoardStatus = (board: Board): BoardStatus => {
 
   // Some tiles are not filled yet
   if (
-    board.some((row) => row.some(([, status]) => status !== TileStatus.NoGuess))
+    board.some((row) => row.some(([, status]) => status === TileStatus.NoGuess))
   ) {
     return BoardStatus.InProgress
   }

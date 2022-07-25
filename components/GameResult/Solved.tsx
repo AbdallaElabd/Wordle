@@ -41,10 +41,9 @@ export const Solved = () => {
           text-align: center;
         `}
       >
-        🙌
         <span
           css={css`
-            margin: 0 1rem;
+            margin-right: 1rem;
           `}
         >
           Solved

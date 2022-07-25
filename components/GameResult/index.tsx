@@ -9,20 +9,24 @@ import { Solved } from './Solved'
 import { Backdrop, CloseIcon, Container } from './styled'
 
 export const GameResult = () => {
-  const { finalAnimationDone, finalBoardStatus } = useBoardProvider()
+  const { solvedAnimationDone, finalBoardStatus } = useBoardProvider()
 
   const [isModalOpen, setIsModalOpen] = useState(true)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
   useClickAway(containerRef, () => {
-    if (!finalAnimationDone) return
+    if (!solvedAnimationDone) return
     setIsModalOpen(false)
   })
 
+  if (!isModalOpen) return null
+
   if (finalBoardStatus === BoardStatus.InProgress) return null
 
-  if (!finalAnimationDone || !isModalOpen) return null
+  if (finalBoardStatus === BoardStatus.Solved && !solvedAnimationDone) {
+    return null
+  }
 
   return (
     <>

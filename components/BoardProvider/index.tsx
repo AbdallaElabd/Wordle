@@ -27,8 +27,8 @@ export type BoardContextType = {
   onKeyPress: (key: string) => void
   revealedRows: Set<number>
   onRowRevealed: (rowIndex: number) => void
-  finalAnimationDone: boolean
-  onFinalAnimationDone: () => void
+  solvedAnimationDone: boolean
+  onSolvedAnimationDone: () => void
 }
 
 export const BoardContext = createContext<BoardContextType>({
@@ -45,8 +45,8 @@ export const BoardContext = createContext<BoardContextType>({
   onKeyPress: () => {},
   revealedRows: new Set(),
   onRowRevealed: () => {},
-  finalAnimationDone: false,
-  onFinalAnimationDone: () => {}
+  solvedAnimationDone: false,
+  onSolvedAnimationDone: () => {}
 })
 
 export const useBoardProvider = () => useContext(BoardContext)
@@ -65,9 +65,9 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 
-  const [finalAnimationDone, setFinalAnimationDone] = useState(false)
-  const onFinalAnimationDone = useCallback(
-    () => setFinalAnimationDone(true),
+  const [solvedAnimationDone, setSolvedAnimationDone] = useState(false)
+  const onSolvedAnimationDone = useCallback(
+    () => setSolvedAnimationDone(true),
     []
   )
 
@@ -105,6 +105,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   }, [internalBoardStatus, guess, setGuess])
 
   const onEnter = useCallback(() => {
+    console.log({ internalBoardStatus })
     if (internalBoardStatus !== BoardStatus.InProgress) return
     submitGuess(guess)
   }, [internalBoardStatus, guess, submitGuess])
@@ -126,20 +127,20 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       onKeyPress,
       revealedRows,
       onRowRevealed,
-      finalAnimationDone,
-      onFinalAnimationDone
+      solvedAnimationDone,
+      onSolvedAnimationDone
     }),
     [
       board,
       boardWithCurrentGuess,
-      finalAnimationDone,
+      solvedAnimationDone,
       finalBoardStatus,
       gameId,
       guess,
       internalBoardStatus,
       onBackspace,
       onEnter,
-      onFinalAnimationDone,
+      onSolvedAnimationDone,
       onKeyPress,
       onRowRevealed,
       revealedRows,
