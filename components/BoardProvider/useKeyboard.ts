@@ -1,6 +1,6 @@
 import { useKey } from 'react-use'
 
-import { BoardContextType } from '.'
+import { BoardContextType } from './types'
 
 type UseKeyboardParams = Pick<
   BoardContextType,

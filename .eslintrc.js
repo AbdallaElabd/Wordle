@@ -8,7 +8,8 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'standard',
-    'plugin:jest/recommended'
+    'plugin:jest/recommended',
+    'next/core-web-vitals'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
