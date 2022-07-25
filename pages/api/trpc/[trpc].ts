@@ -1,11 +1,10 @@
-import * as trpcNext from '@trpc/server/adapters/next'
-import appRouter from 'pages/server/routers/app'
-
-// export type definition of API
-export type AppRouter = typeof appRouter
+import { createNextApiHandler } from '@trpc/server/adapters/next'
+import appRouter from 'server/routers/app'
 
 // export API handler
-export default trpcNext.createNextApiHandler({
+const apiHandler = createNextApiHandler({
   router: appRouter,
-  createContext: () => ({ user: null })
+  createContext: () => undefined
 })
+
+export default apiHandler
