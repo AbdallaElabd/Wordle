@@ -39,7 +39,7 @@ type Index = keyof typeof map
 const Square = styled.div<{ index: Index }>`
   width: 100%;
   height: 100%;
-  background-color: ${theme.colors.dimmed};
+  background-color: ${theme.colors.dark};
   animation-name: ${animation};
   animation-duration: 1.3s;
   animation-iteration-count: infinite;

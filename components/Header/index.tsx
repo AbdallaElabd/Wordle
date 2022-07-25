@@ -11,7 +11,7 @@ export const Header = () => {
         justify-content: center;
         width: 100%;
         padding: 0.5rem;
-        border-bottom: 1px solid ${theme.colors.dimmed};
+        border-bottom: 1px solid ${theme.colors.dark};
       `}
     >
       <h2

@@ -44,7 +44,7 @@ export const StyledKey = styled.span<StyledKeyProps>`
 
   ${({ status = TileStatus.NoGuess }) => {
     const noGuessColors = {
-      background: theme.colors.dimmed,
+      background: theme.colors.dark,
       foreground: '#fff'
     }
     const colors = {

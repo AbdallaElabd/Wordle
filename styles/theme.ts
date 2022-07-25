@@ -2,9 +2,10 @@ import { generateCssGetters } from './utils'
 
 export const themeValues = {
   colors: {
-    background: '#121213',
     foreground: '#fff',
-    dimmed: '#818384',
+    background: '#121213',
+    dark: '#818384',
+    darker: '#2d2e2f',
     guesses: {
       correctPlace: {
         background: '#28a745',

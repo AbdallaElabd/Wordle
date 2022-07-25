@@ -1,15 +1,30 @@
-import { Board, Letter, TileStatus } from 'types/board'
+import { Board, TileStatus } from 'types/board'
 
-import { flatMapBoardTiles, isRowEmpty } from './board'
+import { findLettersByTileStatus, isRowEmpty } from './board'
 
 export const statistics = {
   getNumberOfGuesses(board: Board) {
-    return board.filter((row) => !isRowEmpty(row)).length
+    const count = board.filter((row) => !isRowEmpty(row)).length
+    if (count <= 3) {
+      return `It only took you ${count} tries to guess the right word! 🎉`
+    }
+    if (count <= 5) {
+      return `It took you ${count} tries to guess the right word.`
+    }
+    return `That was close! It took you all ${count} tries to guess the right word.`
+  },
+  getNumberOfCorrectGuesses(board: Board) {
+    const count = findLettersByTileStatus(board, TileStatus.CorrectPlace).size
+    return `You guessed ${count} correct letters.`
   },
   getNumberOfIncorrectLetters(board: Board) {
-    const incorrectLetters = flatMapBoardTiles(board)
-      .filter((tile) => tile[1] === TileStatus.NotInWord)
-      .reduce((set, tile) => set.add(tile[0]), new Set<Letter>())
-    return incorrectLetters.size
+    const count = findLettersByTileStatus(board, TileStatus.NotInWord).size
+    return count <= 3
+      ? `You only guessed ${count} incorrect letters! 🎉`
+      : `You guessed ${count} incorrect letters.`
+  },
+  getNumberOfWrongPlaceGuesses(board: Board) {
+    const count = findLettersByTileStatus(board, TileStatus.WrongPlace).size
+    return `You guessed ${count} correct letters, but they weren't in the correct place.`
   }
 }

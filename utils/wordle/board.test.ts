@@ -4,7 +4,7 @@ import { getBoardStatus } from './board'
 import { boardFixtures } from './fixtures'
 
 describe('board utils', () => {
-  it('should work', () => {
+  it('should get the board status', () => {
     expect(getBoardStatus(boardFixtures.inProgress)).toBe(
       BoardStatus.InProgress
     )

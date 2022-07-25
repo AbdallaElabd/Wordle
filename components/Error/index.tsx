@@ -35,7 +35,7 @@ export const Error = () => {
               opacity: ${toast ? 1 : 0};
               padding: 0.75rem;
               font-size: 1.2rem;
-              background-color: ${theme.colors.dimmed};
+              background-color: ${theme.colors.dark};
               color: ${theme.colors.foreground};
               border-radius: 0.25rem;
               z-index: 1;

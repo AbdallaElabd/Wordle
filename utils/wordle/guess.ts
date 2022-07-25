@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import db from 'db'
 import produce from 'immer'
-import { BoardRow, Letter, TileStatus } from 'types/board'
+import { BoardRow, BoardStatus, Letter, TileStatus } from 'types/board'
 
 import { getBoardStatus, isRowEmpty } from './board'
 import { isWordInList } from './word'
@@ -56,5 +56,11 @@ export const submitGuess = (guess: string, gameId: string) => {
 
   db.updateEntry(gameId, newBoard)
 
-  return { newBoard, boardStatus: getBoardStatus(newBoard) }
+  const boardStatus = getBoardStatus(newBoard)
+
+  return {
+    newBoard,
+    boardStatus,
+    ...(boardStatus === BoardStatus.Failed && { solution })
+  }
 }

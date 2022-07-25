@@ -16,6 +16,7 @@ import { useKeyboard } from './useKeyboard'
 export type BoardContextType = {
   gameId: string | null
   board: Board | null
+  solution: string | null
   boardWithCurrentGuess: Board | null
   internalBoardStatus: BoardStatus
   finalBoardStatus: BoardStatus
@@ -29,11 +30,13 @@ export type BoardContextType = {
   onRowRevealed: (rowIndex: number) => void
   solvedAnimationDone: boolean
   onSolvedAnimationDone: () => void
+  newGame: () => void
 }
 
 export const BoardContext = createContext<BoardContextType>({
   gameId: null,
   board: null,
+  solution: null,
   boardWithCurrentGuess: null,
   internalBoardStatus: BoardStatus.InProgress,
   finalBoardStatus: BoardStatus.InProgress,
@@ -46,7 +49,8 @@ export const BoardContext = createContext<BoardContextType>({
   revealedRows: new Set(),
   onRowRevealed: () => {},
   solvedAnimationDone: false,
-  onSolvedAnimationDone: () => {}
+  onSolvedAnimationDone: () => {},
+  newGame: () => {}
 })
 
 export const useBoardProvider = () => useContext(BoardContext)
@@ -55,12 +59,14 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   const {
     gameId,
     board,
+    solution,
     guess,
     setGuess,
     mutateSubmitGuess,
     updateBoardStatus,
     internalBoardStatus,
-    finalBoardStatus
+    finalBoardStatus,
+    newGame
   } = useGameQueries()
 
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
@@ -105,7 +111,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   }, [internalBoardStatus, guess, setGuess])
 
   const onEnter = useCallback(() => {
-    console.log({ internalBoardStatus })
     if (internalBoardStatus !== BoardStatus.InProgress) return
     submitGuess(guess)
   }, [internalBoardStatus, guess, submitGuess])
@@ -116,6 +121,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     () => ({
       gameId,
       board,
+      solution,
       internalBoardStatus,
       finalBoardStatus,
       boardWithCurrentGuess,
@@ -128,24 +134,27 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       revealedRows,
       onRowRevealed,
       solvedAnimationDone,
-      onSolvedAnimationDone
+      onSolvedAnimationDone,
+      newGame
     }),
     [
-      board,
-      boardWithCurrentGuess,
-      solvedAnimationDone,
-      finalBoardStatus,
       gameId,
-      guess,
+      board,
+      solution,
       internalBoardStatus,
+      finalBoardStatus,
+      boardWithCurrentGuess,
+      guess,
+      setGuess,
+      submitGuess,
       onBackspace,
       onEnter,
-      onSolvedAnimationDone,
       onKeyPress,
-      onRowRevealed,
       revealedRows,
-      setGuess,
-      submitGuess
+      onRowRevealed,
+      solvedAnimationDone,
+      onSolvedAnimationDone,
+      newGame
     ]
   )
 

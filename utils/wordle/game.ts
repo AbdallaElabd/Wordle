@@ -9,10 +9,13 @@ export const getGame = (id: string) => {
 
   if (!game?.board) return undefined
 
+  const boardStatus = getBoardStatus(game.board)
+
   return {
     id,
     board: game.board,
-    boardStatus: getBoardStatus(game.board)
+    boardStatus,
+    ...(boardStatus === BoardStatus.Failed && { solution: game.solution })
   }
 }
 

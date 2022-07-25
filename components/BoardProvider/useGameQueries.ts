@@ -3,12 +3,14 @@ import { Board, BoardStatus } from 'types/board'
 import { trpcHooks } from 'utils/trpc'
 
 import { useToastProvider } from '../ToastProvider'
-import { useLocalStorage } from './useLocalStorage'
+import { useLocalStorageItem } from './useLocalStorageItem'
 
 export const useGameQueries = () => {
   const { addToast } = useToastProvider()
 
-  const [gameId, setGameId] = useLocalStorage<string | null>('gameId')
+  const [solution, setSolution] = useState<string | null>(null)
+
+  const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId')
 
   const [board, setBoard] = useState<Board | null>(null)
 
@@ -24,6 +26,15 @@ export const useGameQueries = () => {
     setFinalBoardStatus(internalBoardStatus)
   }, [internalBoardStatus])
 
+  const newGame = useCallback(() => {
+    setSolution(null)
+    setBoard(null)
+    setGameId(null)
+    setGuess('')
+    setInternalBoardStatus(BoardStatus.InProgress)
+    setFinalBoardStatus(BoardStatus.InProgress)
+  }, [setGameId])
+
   trpcHooks.useQuery(['game.startGame', { gameId }], {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -32,6 +43,7 @@ export const useGameQueries = () => {
       setBoard(data.board)
       setInternalBoardStatus(data.boardStatus)
       setGameId(data.id)
+      if (data.solution) setSolution(data.solution)
     }
   })
 
@@ -45,6 +57,7 @@ export const useGameQueries = () => {
         setBoard(data.newBoard)
         setInternalBoardStatus(data.boardStatus)
         setGuess('')
+        if (data.solution) setSolution(data.solution)
       },
       onError: (error) => {
         addToast(error.message)
@@ -55,11 +68,13 @@ export const useGameQueries = () => {
   return {
     gameId,
     board,
+    solution,
     guess,
     setGuess,
     mutateSubmitGuess,
     internalBoardStatus,
     finalBoardStatus,
-    updateBoardStatus
+    updateBoardStatus,
+    newGame
   }
 }

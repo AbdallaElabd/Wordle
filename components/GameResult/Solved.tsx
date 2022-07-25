@@ -2,29 +2,10 @@
 import { css } from '@emotion/react'
 import { useBoardProvider } from 'components/BoardProvider'
 import { theme } from 'styles'
-import { Board } from 'types/board'
 import { statistics } from 'utils/wordle/statistics'
 
-const getNumberOfGuessesText = (board: Board): string => {
-  const count = statistics.getNumberOfGuesses(board)
-  if (count <= 3) {
-    return `It only took you ${count} to guess the right word! 🎉`
-  }
-  if (count <= 5) {
-    return `It took you ${count} tries to guess the right word.`
-  }
-  return `That was close! It took you all ${count} tries to guess the right word.`
-}
-
-const getIncorrectLettersText = (board: Board): string => {
-  const count = statistics.getNumberOfIncorrectLetters(board)
-  return count <= 3
-    ? `You only guessed ${count} incorrect letters! 🎉`
-    : `You guessed ${count} incorrect letters.`
-}
-
 export const Solved = () => {
-  const { board } = useBoardProvider()
+  const { board, solution } = useBoardProvider()
 
   if (!board) return null
 
@@ -50,7 +31,9 @@ export const Solved = () => {
         </span>
         🙌
       </h3>
-      <p>Here are some statistics:</p>
+      <p>
+        The solution was <b>{solution}</b>
+      </p>
       <ul
         css={css`
           padding-left: 1.5rem;
@@ -60,14 +43,14 @@ export const Solved = () => {
           }
         `}
       >
-        <li>{getNumberOfGuessesText(board)}</li>
-        <li>{getIncorrectLettersText(board)}</li>
+        <li>{statistics.getNumberOfGuesses(board)}</li>
+        <li>{statistics.getNumberOfIncorrectLetters(board)}</li>
       </ul>
       <div
         css={css`
           width: 100%;
           height: 1px;
-          background: ${theme.colors.dimmed};
+          background: ${theme.colors.dark};
           margin: 1.5rem 0;
         `}
       />

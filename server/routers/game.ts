@@ -1,9 +1,17 @@
 import { TRPCError } from '@trpc/server'
+import { Board, BoardStatus } from 'types/board'
 import { createGame, getGame } from 'utils/wordle/game'
 import { submitGuess } from 'utils/wordle/guess'
 import { z } from 'zod'
 
 import { createRouter } from '../context'
+
+type StartGameResult = {
+  solution?: string | undefined
+  id: string
+  board: Board
+  boardStatus: BoardStatus
+}
 
 const gameRouter = createRouter()
   .query('startGame', {
@@ -12,13 +20,13 @@ const gameRouter = createRouter()
         gameId: z.string().nullish()
       })
       .nullish(),
-    resolve({ input }) {
+    resolve({ input }): StartGameResult {
       const gameId = input?.gameId
-      if (!gameId) return createGame()
+      const previousGame = gameId ? getGame(gameId) : undefined
 
-      const previousGame = getGame(gameId)
+      if (!previousGame) return createGame()
 
-      return previousGame || createGame()
+      return previousGame
     }
   })
   .mutation('submitGuess', {

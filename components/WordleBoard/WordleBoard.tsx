@@ -78,7 +78,6 @@ export function WordleBoard() {
                       finalBoardStatus === BoardStatus.Solved
                     }
                     onAnimationEnd={(event) => {
-                      console.log({ row, tileIndex })
                       event.stopPropagation()
                       if (tileIndex === row.length - 1) {
                         onSolvedAnimationDone()

@@ -35,8 +35,14 @@ export const getBoardWithCurrentGuess = (
     }
   })
 
-export const flatMapBoardTiles = (board: Board) => {
-  return board.flatMap((row) => row)
+export const findLettersByTileStatus = (
+  board: Board,
+  tileStatus: TileStatus
+) => {
+  return board
+    .flatMap((row) => row)
+    .filter((tile) => tile[1] === tileStatus)
+    .reduce((set, tile) => set.add(tile[0]), new Set<Letter>())
 }
 
 export const getBoardStatus = (board: Board): BoardStatus => {
