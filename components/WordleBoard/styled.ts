@@ -33,11 +33,11 @@ export const Row = styled.div<RowProps>`
     `}
 `
 
-interface ZoomShakeAnimationProps {
+interface PulseAnimationProps {
   animate: boolean
 }
 
-export const ZoomShakeAnimation = styled.div<ZoomShakeAnimationProps>`
+export const PulseAnimation = styled.div<PulseAnimationProps>`
   display: flex;
   flex: 1;
   max-width: 4rem;
@@ -45,7 +45,7 @@ export const ZoomShakeAnimation = styled.div<ZoomShakeAnimationProps>`
   ${({ animate }) =>
     animate &&
     css`
-      animation-name: ${animations.zoomShake};
+      animation-name: ${animations.pulse};
       animation-duration: 0.25s;
       animation-fill-mode: forwards;
     `}
@@ -60,43 +60,48 @@ export const SolvedBounceAnimation = styled.div<SolvedBounceAnimationProps>`
   ${({ animate, tileIndex }) =>
     animate &&
     css`
-      animation-name: ${animations.bounce};
+      animation-name: ${animations.bounce(20)};
       animation-duration: 1s;
       animation-delay: ${tileIndex * 0.1}s;
       animation-timing-function: ease-in-out;
     `}
 `
 
+export const GuessingBounceAnimation = styled.div<{ animate: boolean }>`
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${({ animate }) =>
+    animate &&
+    css`
+      animation: ${animations.bounce(5)} 0.7s infinite;
+    `}
+`
+
 interface TileProps {
   status: TileStatus
-  flipAnimation: boolean
+  animate: boolean
   tileIndex: number
   isSubmittingGuess: boolean
 }
 
 export const Tile = styled.div<TileProps>`
   flex: 1;
+  position: relative;
   font-family: ${theme.fonts.body};
+  overflow: hidden;
   font-weight: bold;
   font-size: 2rem;
   text-transform: capitalize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 2px solid;
   background-color: ${theme.colors.guesses.noGuess.background};
   color: ${theme.colors.guesses.noGuess.foreground};
   border-color: ${theme.colors.guesses.noGuess.border};
 
-  transition: opacity 0.2s;
-  opacity: 1;
-  ${({ isSubmittingGuess }) =>
-    isSubmittingGuess &&
-    css`
-      opacity: 0.8;
-    `};
-
-  ${({ status, flipAnimation, tileIndex }) => {
+  ${({ status, animate, tileIndex }) => {
     const colors = {
       [TileStatus.CorrectPlace]: theme.colors.guesses.correctPlace,
       [TileStatus.WrongPlace]: theme.colors.guesses.wrongPlace,
@@ -105,7 +110,7 @@ export const Tile = styled.div<TileProps>`
     }[status]
 
     return css`
-      ${flipAnimation &&
+      ${animate &&
       css`
         animation-name: ${animations.flip(
           theme.colors.guesses.noGuess,

@@ -29,7 +29,7 @@ const horizontalShake = keyframes`
   }
 `
 
-const zoomShake = keyframes`
+const pulse = keyframes`
   0% {
     transform: scale(1);
   }
@@ -71,21 +71,21 @@ const flip = (fromColor: ColorKeyframe, toColor: ColorKeyframe) => keyframes`
   }
 `
 
-const bounce = keyframes`
+const bounce = (maxOffset: number) => keyframes`
   0%, 20% {
     transform: translateY(0);
   }
   40% {
-    transform: translateY(-20px);
+    transform: translateY(-${maxOffset}px);
   }
   50% {
-    transform: translateY(5px);
+    transform: translateY(${maxOffset / 4}px);
   }
   60% {
-    transform: translateY(-15px);
+    transform: translateY(-${maxOffset / 2}px);
   }
   80% {
-    transform: translateY(2px);
+    transform: translateY(${maxOffset / 10}px);
   }
   100% {
     transform: translateY(0);
@@ -96,7 +96,7 @@ export const animations = {
   fadeIn,
   fadeOut,
   horizontalShake,
-  zoomShake,
+  pulse,
   flip,
   bounce
 }

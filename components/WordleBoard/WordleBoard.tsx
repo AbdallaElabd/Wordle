@@ -7,10 +7,11 @@ import { useBoardProvider } from '../BoardProvider'
 import { useToastListener } from '../ToastProvider'
 import {
   Container,
+  GuessingBounceAnimation,
+  PulseAnimation,
   Row,
   SolvedBounceAnimation,
-  Tile,
-  ZoomShakeAnimation
+  Tile
 } from './styled'
 
 export function WordleBoard() {
@@ -64,12 +65,14 @@ export function WordleBoard() {
               const [char, status] = tile
 
               return (
-                <ZoomShakeAnimation
+                <PulseAnimation
                   key={tileIndex}
+                  // As the user types
                   animate={isCurrentGuessRow && char !== ''}
                 >
                   <SolvedBounceAnimation
                     tileIndex={tileIndex}
+                    // When the board is solved
                     animate={
                       row === getLastFilledRow(board) &&
                       finalBoardStatus === BoardStatus.Solved
@@ -83,9 +86,9 @@ export function WordleBoard() {
                   >
                     <Tile
                       status={status}
-                      flipAnimation={!rowIsEmpty}
+                      animate={!rowIsEmpty}
                       tileIndex={tileIndex}
-                      isSubmittingGuess={isSubmittingGuess}
+                      isSubmittingGuess={!isSubmittingGuess}
                       onAnimationEnd={(event) => {
                         event.stopPropagation()
                         // When the last tile is revealed, that means
@@ -95,10 +98,14 @@ export function WordleBoard() {
                         }
                       }}
                     >
-                      {char}
+                      <GuessingBounceAnimation
+                        animate={isCurrentGuessRow && isSubmittingGuess}
+                      >
+                        {char}
+                      </GuessingBounceAnimation>
                     </Tile>
                   </SolvedBounceAnimation>
-                </ZoomShakeAnimation>
+                </PulseAnimation>
               )
             })}
           </Row>
