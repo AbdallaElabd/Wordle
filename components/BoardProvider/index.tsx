@@ -14,7 +14,6 @@ import { useGameQueries } from './useGameQueries'
 import { useKeyboard } from './useKeyboard'
 
 export type BoardContextType = {
-  gameId: string | null
   board: Board | null
   solution: string | null
   boardWithCurrentGuess: Board | null
@@ -34,7 +33,6 @@ export type BoardContextType = {
 }
 
 export const BoardContext = createContext<BoardContextType>({
-  gameId: null,
   board: null,
   solution: null,
   boardWithCurrentGuess: null,
@@ -57,12 +55,11 @@ export const useBoardProvider = () => useContext(BoardContext)
 
 export const BoardProvider = ({ children }: PropsWithChildren) => {
   const {
-    gameId,
     board,
     solution,
     guess,
     setGuess,
-    mutateSubmitGuess,
+    submitGuess,
     updateBoardStatus,
     internalBoardStatus,
     finalBoardStatus,
@@ -85,14 +82,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       updateBoardStatus()
     },
     [addRevealedRow, updateBoardStatus]
-  )
-
-  const submitGuess = useCallback(
-    (guess: string) => {
-      if (!gameId) return
-      mutateSubmitGuess({ guess, gameId })
-    },
-    [gameId, mutateSubmitGuess]
   )
 
   const onKeyPress = useCallback(
@@ -119,7 +108,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const value = useMemo(
     () => ({
-      gameId,
       board,
       solution,
       internalBoardStatus,
@@ -138,7 +126,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       newGame
     }),
     [
-      gameId,
       board,
       solution,
       internalBoardStatus,

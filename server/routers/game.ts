@@ -15,18 +15,19 @@ type StartGameResult = {
 
 const gameRouter = createRouter()
   .query('startGame', {
-    input: z
-      .object({
-        gameId: z.string().nullish()
-      })
-      .nullish(),
-    resolve({ input }): StartGameResult {
-      const gameId = input?.gameId
-      const previousGame = gameId ? getGame(gameId) : undefined
+    input: z.object({
+      gameId: z.string().nullish()
+    }),
+    async resolve({ input: { gameId } }): Promise<StartGameResult> {
+      if (gameId) {
+        const previousGame = await getGame(gameId)
 
-      if (!previousGame) return createGame()
+        if (previousGame) {
+          return previousGame
+        }
+      }
 
-      return previousGame
+      return createGame()
     }
   })
   .mutation('submitGuess', {

@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import { useBoardProvider } from 'components/BoardProvider'
+import { Button } from 'components/Button'
 import { theme } from 'styles'
 import { statistics } from 'utils/wordle/statistics'
 
 export const Solved = () => {
-  const { board, solution } = useBoardProvider()
+  const { board, solution, newGame } = useBoardProvider()
 
   if (!board) return null
 
@@ -54,7 +55,9 @@ export const Solved = () => {
           margin: 1.5rem 0;
         `}
       />
-      <p></p>
+      <p>
+        <Button onClick={newGame}>Try another word</Button>
+      </p>
     </div>
   )
 }

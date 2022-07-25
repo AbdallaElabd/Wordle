@@ -1,4 +1,6 @@
 import { useCallback, useState } from 'react'
+import { flushSync } from 'react-dom'
+import { useMount } from 'react-use'
 import { Board, BoardStatus } from 'types/board'
 import { trpcHooks } from 'utils/trpc'
 
@@ -8,17 +10,15 @@ import { useLocalStorageItem } from './useLocalStorageItem'
 export const useGameQueries = () => {
   const { addToast } = useToastProvider()
 
-  const [solution, setSolution] = useState<string | null>(null)
-
-  const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId')
-
+  const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId', null)
   const [board, setBoard] = useState<Board | null>(null)
-
   const [guess, setGuess] = useState<string>('')
+  const [solution, setSolution] = useState<string | null>(null)
 
   const [internalBoardStatus, setInternalBoardStatus] = useState<BoardStatus>(
     BoardStatus.InProgress
   )
+  // Is updated after reveal animations are done
   const [finalBoardStatus, setFinalBoardStatus] = useState<BoardStatus>(
     BoardStatus.InProgress
   )
@@ -26,33 +26,40 @@ export const useGameQueries = () => {
     setFinalBoardStatus(internalBoardStatus)
   }, [internalBoardStatus])
 
-  const newGame = useCallback(() => {
-    setSolution(null)
-    setBoard(null)
-    setGameId(null)
-    setGuess('')
-    setInternalBoardStatus(BoardStatus.InProgress)
-    setFinalBoardStatus(BoardStatus.InProgress)
-  }, [setGameId])
-
-  trpcHooks.useQuery(['game.startGame', { gameId }], {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    onSuccess(data) {
-      setBoard(data.board)
-      setInternalBoardStatus(data.boardStatus)
-      setGameId(data.id)
-      if (data.solution) setSolution(data.solution)
+  const { refetch: createGame } = trpcHooks.useQuery(
+    ['game.startGame', { gameId }],
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      onSuccess(data) {
+        setBoard(data.board)
+        setInternalBoardStatus(data.boardStatus)
+        setGameId(data.id)
+        if (data.solution) setSolution(data.solution)
+      }
     }
-  })
+  )
+
+  // A new game is created when the app is mounted for the first time.
+  useMount(createGame)
+
+  const newGame = useCallback(() => {
+    flushSync(() => {
+      setSolution(null)
+      setBoard(null)
+      setGameId(null)
+      setGuess('')
+      setInternalBoardStatus(BoardStatus.InProgress)
+      setFinalBoardStatus(BoardStatus.InProgress)
+    })
+    createGame()
+  }, [createGame, setGameId])
 
   const { mutate: mutateSubmitGuess } = trpcHooks.useMutation(
     'game.submitGuess',
     {
-      onMutate: (params) => {
-        return { gameId, guess: params.guess }
-      },
       onSuccess: (data) => {
         setBoard(data.newBoard)
         setInternalBoardStatus(data.boardStatus)
@@ -65,13 +72,20 @@ export const useGameQueries = () => {
     }
   )
 
+  const submitGuess = useCallback(
+    (guess: string) => {
+      if (!gameId) return
+      mutateSubmitGuess({ guess, gameId })
+    },
+    [gameId, mutateSubmitGuess]
+  )
+
   return {
-    gameId,
     board,
     solution,
     guess,
     setGuess,
-    mutateSubmitGuess,
+    submitGuess,
     internalBoardStatus,
     finalBoardStatus,
     updateBoardStatus,

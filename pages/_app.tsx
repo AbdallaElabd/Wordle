@@ -16,8 +16,15 @@ export default withTRPC<AppRouter>({
       : 'http://localhost:3000/api/trpc'
 
     return {
-      url
+      url,
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            retry: false
+          }
+        }
+      }
     }
   },
-  ssr: true
+  ssr: false
 })(MyApp)

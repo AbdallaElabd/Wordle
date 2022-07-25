@@ -1,13 +1,12 @@
-import db from 'db'
-import { BoardStatus } from 'types/board'
+import { gameDb } from 'db/game'
+import { Board, BoardStatus } from 'types/board'
 
-import { createEmptyBoard, getBoardStatus } from './board'
-import { getRandomTargetWord } from './word'
+import { getBoardStatus } from './board'
 
-export const getGame = (id: string) => {
-  const { game } = db.getEntry(id)
+export const getGame = async (id: string) => {
+  const game = await gameDb.getGame(id)
 
-  if (!game?.board) return undefined
+  if (!game) return null
 
   const boardStatus = getBoardStatus(game.board)
 
@@ -19,13 +18,15 @@ export const getGame = (id: string) => {
   }
 }
 
-export const createGame = () => {
-  const board = createEmptyBoard()
-  const solution = getRandomTargetWord()
-  const id = db.addEntry(board, solution)
-  return { id, board, boardStatus: BoardStatus.InProgress }
+export const createGame = async () => {
+  const game = await gameDb.createGame()
+  return {
+    id: game.id,
+    board: game.board as Board,
+    boardStatus: BoardStatus.InProgress
+  }
 }
 
 export const deleteGame = (id: string) => {
-  db.deleteEntry(id)
+  return gameDb.deleteGame(id)
 }

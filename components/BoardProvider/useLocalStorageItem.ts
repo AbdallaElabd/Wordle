@@ -1,22 +1,42 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+
+const getLocalStorage = () => {
+  return typeof window === 'undefined' ? undefined : window.localStorage
+}
+
+const getInitialValue = <T>(key: string, defaultValue: T) => {
+  const storage = getLocalStorage()
+  if (!storage) return defaultValue
+
+  const storedValue = storage.getItem(key)
+  if (storedValue == null) return defaultValue
+
+  try {
+    const parsedValue = JSON.parse(storedValue) as T
+    return parsedValue
+  } catch (error) {
+    console.error('Error parsing saved value: ', storedValue)
+    return defaultValue
+  }
+}
 
 export const useLocalStorageItem = <T>(
-  key: string
+  key: string,
+  defaultValue: T
 ): [T, (value: T) => void] => {
-  const [value, setValue] = useState<T>(
-    typeof window === 'undefined'
-      ? (undefined as unknown as T)
-      : (localStorage.getItem(key) as unknown as T)
+  const storage = getLocalStorage()
+
+  const [value, setValue] = useState<T>(() =>
+    getInitialValue(key, defaultValue)
   )
 
   const setter = useCallback(
     (newValue: T) => {
+      storage?.setItem(key, JSON.stringify(newValue) as unknown as string)
       setValue(newValue)
-      if (typeof window === 'undefined') return
-      localStorage.setItem(key, newValue as unknown as string)
     },
-    [key]
+    [key, storage]
   )
 
-  return [value, setter]
+  return useMemo(() => [value, setter], [setter, value])
 }

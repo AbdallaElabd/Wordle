@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import db from 'db'
+import { gameDb } from 'db/game'
 import produce from 'immer'
 import { BoardRow, BoardStatus, Letter, TileStatus } from 'types/board'
 
@@ -18,17 +18,17 @@ export const validateGuess = (guess: string, solution: string) => {
   }, [])
 }
 
-export const submitGuess = (guess: string, gameId: string) => {
-  const entry = db.getEntry(gameId)
+export const submitGuess = async (guess: string, gameId: string) => {
+  const game = await gameDb.getGame(gameId)
 
-  if (!entry.game) {
+  if (!game) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: `Tried submitting a guess for a non-existing game. Game ID: ${gameId}`
     })
   }
 
-  if (entry.game.board.every((row) => !isRowEmpty(row))) {
+  if (game.board.every((row) => !isRowEmpty(row))) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Tried submitting a guess for a completed game.'
@@ -42,11 +42,11 @@ export const submitGuess = (guess: string, gameId: string) => {
     })
   }
 
-  const solution = entry.game.solution
+  const solution = game.solution
 
   const guessResult = validateGuess(guess, solution)
 
-  const newBoard = produce(entry.game.board, (draft) => {
+  const newBoard = produce(game.board, (draft) => {
     if (!draft) return draft
     const currentRow = draft?.findIndex((row) => isRowEmpty(row))
     if (currentRow != null && currentRow >= 0) {
@@ -54,7 +54,7 @@ export const submitGuess = (guess: string, gameId: string) => {
     }
   })
 
-  db.updateEntry(gameId, newBoard)
+  gameDb.updateGame(gameId, newBoard)
 
   const boardStatus = getBoardStatus(newBoard)
 
