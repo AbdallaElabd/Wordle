@@ -28,7 +28,6 @@ interface StyledKeyProps {
 
 export const StyledKey = styled.span<StyledKeyProps>`
   font-family: ${theme.fonts.body};
-  font-weight: normal;
   border-radius: 0.25rem;
   padding: 0.75rem 0;
   flex-grow: 1;

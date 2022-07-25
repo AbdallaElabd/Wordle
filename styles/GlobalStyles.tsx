@@ -15,10 +15,15 @@ export function GlobalStyle() {
             font-size: 14px;
           }
         }
+
+        // disable NextJS FOUC prevention
+        body {
+          display: block !important;
+        }
         html,
         body {
           margin: 0 auto;
-          font-family: ${theme.fonts.body}, Sans-Serif;
+          font-family: ${theme.fonts.body};
           font-weight: normal;
           padding: 0;
           margin: 0;

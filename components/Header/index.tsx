@@ -14,15 +14,16 @@ export const Header = () => {
         border-bottom: 1px solid ${theme.colors.dark};
       `}
     >
-      <h2
+      <span
         css={css`
           font-family: ${theme.fonts.header};
           font-size: 3rem;
+          font-weight: bold;
           margin: 0;
         `}
       >
         Wordle
-      </h2>
+      </span>
     </div>
   )
 }

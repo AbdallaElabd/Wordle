@@ -1,13 +1,3 @@
-import dynamic from 'next/dynamic'
+import { App } from 'components/App'
 
-const DynamicComponentWithNoSSR = dynamic(
-  // @ts-ignore
-  () => import('components/App').then((module) => module.App),
-  {
-    ssr: false
-  }
-)
-
-const AppNoSSR = () => <DynamicComponentWithNoSSR />
-
-export default AppNoSSR
+export default App

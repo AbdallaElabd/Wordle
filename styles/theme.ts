@@ -13,9 +13,9 @@ export const themeValues = {
         border: '#28a745'
       },
       wrongPlace: {
-        background: '#ffc107',
+        background: '#dea705',
         foreground: '#fff',
-        border: '#ffc107'
+        border: '#dea705'
       },
       notInWord: {
         background: '#3a3a3c',
@@ -30,8 +30,8 @@ export const themeValues = {
     }
   },
   fonts: {
-    header: "'Oswald'",
-    body: "'Open Sans'"
+    header: "'Playfair Display', serif",
+    body: "'Open Sans', sans-serif"
   },
   transition: {
     slow: '1s ease-out',

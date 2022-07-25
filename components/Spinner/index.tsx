@@ -1,5 +1,5 @@
-import { keyframes } from '@emotion/react'
-import styled from '@emotion/styled'
+/** @jsxImportSource @emotion/react */
+import { css, keyframes } from '@emotion/react'
 import { theme } from 'styles'
 
 const animation = keyframes`
@@ -10,16 +10,6 @@ const animation = keyframes`
     -webkit-transform: scale3D(0, 0, 1);
             transform: scale3D(0, 0, 1);
   }
-`
-
-const Grid = styled.div`
-  width: 6rem;
-  height: 6rem;
-  margin: 100px auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: 0.5rem;
 `
 
 const map = {
@@ -36,26 +26,38 @@ const map = {
 
 type Index = keyof typeof map
 
-const Square = styled.div<{ index: Index }>`
-  width: 100%;
-  height: 100%;
-  background-color: ${theme.colors.dark};
-  animation-name: ${animation};
-  animation-duration: 1.3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  animation-delay: ${({ index }) => map[index] ?? '0s'};
-`
-
 export const Spinner = () => {
   return (
-    <Grid>
+    <div
+      id="spinner here"
+      css={css`
+        width: 6rem;
+        height: 6rem;
+        margin: 100px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 0.5rem;
+      `}
+    >
       {Array(9)
         .fill(null)
         .map((val, index) => index as Index)
         .map((index) => (
-          <Square key={index} index={index} />
+          <div
+            key={index}
+            css={css`
+              width: 100%;
+              height: 100%;
+              background-color: ${theme.colors.dark};
+              animation-name: ${animation};
+              animation-duration: 1.3s;
+              animation-iteration-count: infinite;
+              animation-timing-function: ease-in-out;
+              animation-delay: ${map[index] ?? '0s'};
+            `}
+          />
         ))}
-    </Grid>
+    </div>
   )
 }
