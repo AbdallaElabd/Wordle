@@ -9,6 +9,7 @@ export type BoardContextType = {
   guess: string
   setGuess: (guess: string) => void
   submitGuess: (guess: string) => void
+  isSubmittingGuess: boolean
   onBackspace: () => void
   onEnter: () => void
   onKeyPress: (key: string) => void

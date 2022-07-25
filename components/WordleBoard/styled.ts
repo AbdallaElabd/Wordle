@@ -71,6 +71,7 @@ interface TileProps {
   status: TileStatus
   flipAnimation: boolean
   tileIndex: number
+  isSubmittingGuess: boolean
 }
 
 export const Tile = styled.div<TileProps>`
@@ -86,6 +87,14 @@ export const Tile = styled.div<TileProps>`
   background-color: ${theme.colors.guesses.noGuess.background};
   color: ${theme.colors.guesses.noGuess.foreground};
   border-color: ${theme.colors.guesses.noGuess.border};
+
+  transition: opacity 0.2s;
+  opacity: 1;
+  ${({ isSubmittingGuess }) =>
+    isSubmittingGuess &&
+    css`
+      opacity: 0.8;
+    `};
 
   ${({ status, flipAnimation, tileIndex }) => {
     const colors = {

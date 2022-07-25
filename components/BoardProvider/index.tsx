@@ -26,6 +26,7 @@ export const BoardContext = createContext<BoardContextType>({
   guess: '',
   setGuess: () => {},
   submitGuess: () => {},
+  isSubmittingGuess: false,
   onBackspace: () => {},
   onEnter: () => {},
   onKeyPress: () => {},
@@ -76,9 +77,8 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   // A new game is created when the app is mounted for the first time.
   useMount(createGame)
 
-  const { mutate: mutateSubmitGuess } = trpcHooks.useMutation(
-    'game.submitGuess',
-    {
+  const { mutate: mutateSubmitGuess, isLoading: isSubmittingGuess } =
+    trpcHooks.useMutation('game.submitGuess', {
       onSuccess: (data) => {
         setBoard(data.newBoard)
         setInternalBoardStatus(data.boardStatus)
@@ -88,15 +88,14 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       onError: (error) => {
         addToast(error.message)
       }
-    }
-  )
+    })
 
   const submitGuess = useCallback(
     (guess: string) => {
-      if (!gameId) return
+      if (!gameId || isSubmittingGuess) return
       mutateSubmitGuess({ guess, gameId })
     },
-    [gameId, mutateSubmitGuess]
+    [gameId, isSubmittingGuess, mutateSubmitGuess]
   )
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 
@@ -137,25 +136,29 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   /**
    * Keyboard handlers
    */
+
+  const disableInteractions =
+    internalBoardStatus !== BoardStatus.InProgress || isSubmittingGuess
+
   const onKeyPress = useCallback(
     (key: string) => {
-      if (internalBoardStatus !== BoardStatus.InProgress) return
+      if (disableInteractions) return
       if (guess.length >= 5) return
       const newGuess = `${guess}${key}`
       setGuess(newGuess)
     },
-    [internalBoardStatus, guess, setGuess]
+    [disableInteractions, guess]
   )
 
   const onBackspace = useCallback(() => {
-    if (internalBoardStatus !== BoardStatus.InProgress) return
+    if (disableInteractions) return
     setGuess(guess.slice(0, guess.length - 1))
-  }, [internalBoardStatus, guess, setGuess])
+  }, [disableInteractions, guess])
 
   const onEnter = useCallback(() => {
-    if (internalBoardStatus !== BoardStatus.InProgress) return
+    if (disableInteractions) return
     submitGuess(guess)
-  }, [internalBoardStatus, guess, submitGuess])
+  }, [disableInteractions, submitGuess, guess])
 
   useKeyboard({ onKeyPress, onBackspace, onEnter })
 
@@ -169,6 +172,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       guess,
       setGuess,
       submitGuess,
+      isSubmittingGuess,
       onBackspace,
       onEnter,
       onKeyPress,
@@ -185,8 +189,8 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       finalBoardStatus,
       boardWithCurrentGuess,
       guess,
-      setGuess,
       submitGuess,
+      isSubmittingGuess,
       onBackspace,
       onEnter,
       onKeyPress,

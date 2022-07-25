@@ -18,6 +18,7 @@ export function WordleBoard() {
     board,
     boardWithCurrentGuess,
     finalBoardStatus,
+    isSubmittingGuess,
     onRowRevealed,
     onSolvedAnimationDone
   } = useBoardProvider()
@@ -40,7 +41,7 @@ export function WordleBoard() {
   return (
     <Container>
       {boardWithCurrentGuess.map((row, rowIndex) => {
-        const isEmptyRow = isRowEmpty(board[rowIndex])
+        const rowIsEmpty = isRowEmpty(board[rowIndex])
 
         // The current guess is the first empty row in the original board
         const isCurrentGuessRow =
@@ -82,8 +83,9 @@ export function WordleBoard() {
                   >
                     <Tile
                       status={status}
-                      flipAnimation={!isEmptyRow}
+                      flipAnimation={!rowIsEmpty}
                       tileIndex={tileIndex}
+                      isSubmittingGuess={isSubmittingGuess}
                       onAnimationEnd={(event) => {
                         event.stopPropagation()
                         // When the last tile is revealed, that means
