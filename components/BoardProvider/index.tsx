@@ -1,3 +1,4 @@
+import { useToastProvider } from 'components/ToastProvider'
 import {
   createContext,
   PropsWithChildren,
@@ -6,31 +7,15 @@ import {
   useMemo,
   useState
 } from 'react'
-import { useSet } from 'react-use'
+import { flushSync } from 'react-dom'
+import { useMount, useSet } from 'react-use'
 import { Board, BoardStatus } from 'types/board'
+import { trpcHooks } from 'utils/trpc'
 import { getBoardWithCurrentGuess } from 'utils/wordle/board'
 
-import { useGameQueries } from './useGameQueries'
+import { BoardContextType } from './types'
 import { useKeyboard } from './useKeyboard'
-
-export type BoardContextType = {
-  board: Board | null
-  solution: string | null
-  boardWithCurrentGuess: Board | null
-  internalBoardStatus: BoardStatus
-  finalBoardStatus: BoardStatus
-  guess: string
-  setGuess: (guess: string) => void
-  submitGuess: (guess: string) => void
-  onBackspace: () => void
-  onEnter: () => void
-  onKeyPress: (key: string) => void
-  revealedRows: Set<number>
-  onRowRevealed: (rowIndex: number) => void
-  solvedAnimationDone: boolean
-  onSolvedAnimationDone: () => void
-  newGame: () => void
-}
+import { useLocalStorageItem } from './useLocalStorageItem'
 
 export const BoardContext = createContext<BoardContextType>({
   board: null,
@@ -54,18 +39,65 @@ export const BoardContext = createContext<BoardContextType>({
 export const useBoardProvider = () => useContext(BoardContext)
 
 export const BoardProvider = ({ children }: PropsWithChildren) => {
-  const {
-    board,
-    solution,
-    guess,
-    setGuess,
-    submitGuess,
-    updateBoardStatus,
-    internalBoardStatus,
-    finalBoardStatus,
-    newGame
-  } = useGameQueries()
+  const { addToast } = useToastProvider()
 
+  const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId', null)
+  const [board, setBoard] = useState<Board | null>(null)
+  const [guess, setGuess] = useState<string>('')
+  const [solution, setSolution] = useState<string | null>(null)
+
+  const [internalBoardStatus, setInternalBoardStatus] = useState<BoardStatus>(
+    BoardStatus.InProgress
+  )
+  // Is updated after reveal animations are done
+  const [finalBoardStatus, setFinalBoardStatus] = useState<BoardStatus>(
+    BoardStatus.InProgress
+  )
+  const updateBoardStatus = useCallback(() => {
+    setFinalBoardStatus(internalBoardStatus)
+  }, [internalBoardStatus])
+
+  const { refetch: createGame } = trpcHooks.useQuery(
+    ['game.startGame', { gameId }],
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      onSuccess(data) {
+        setBoard(data.board)
+        setInternalBoardStatus(data.boardStatus)
+        setGameId(data.id)
+        if (data.solution) setSolution(data.solution)
+      }
+    }
+  )
+
+  // A new game is created when the app is mounted for the first time.
+  useMount(createGame)
+
+  const { mutate: mutateSubmitGuess } = trpcHooks.useMutation(
+    'game.submitGuess',
+    {
+      onSuccess: (data) => {
+        setBoard(data.newBoard)
+        setInternalBoardStatus(data.boardStatus)
+        setGuess('')
+        if (data.solution) setSolution(data.solution)
+      },
+      onError: (error) => {
+        addToast(error.message)
+      }
+    }
+  )
+
+  const submitGuess = useCallback(
+    (guess: string) => {
+      if (!gameId) return
+      mutateSubmitGuess({ guess, gameId })
+    },
+    [gameId, mutateSubmitGuess]
+  )
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 
   const [solvedAnimationDone, setSolvedAnimationDone] = useState(false)
@@ -74,7 +106,8 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     []
   )
 
-  const [revealedRows, { add: addRevealedRow }] = useSet<number>(new Set())
+  const [revealedRows, { add: addRevealedRow, reset: resetRevealedRows }] =
+    useSet<number>(new Set())
 
   const onRowRevealed = useCallback(
     (rowIndex: number) => {
@@ -84,6 +117,26 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     [addRevealedRow, updateBoardStatus]
   )
 
+  /**
+   * Resets app's state and creates a new game
+   */
+  const newGame = useCallback(() => {
+    flushSync(() => {
+      setGameId(null)
+      setBoard(null)
+      setGuess('')
+      setSolution(null)
+      setInternalBoardStatus(BoardStatus.InProgress)
+      setFinalBoardStatus(BoardStatus.InProgress)
+      setSolvedAnimationDone(false)
+      resetRevealedRows()
+    })
+    createGame()
+  }, [createGame, resetRevealedRows, setGameId])
+
+  /**
+   * Keyboard handlers
+   */
   const onKeyPress = useCallback(
     (key: string) => {
       if (internalBoardStatus !== BoardStatus.InProgress) return

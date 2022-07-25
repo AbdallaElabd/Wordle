@@ -1,63 +1,31 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react'
 import { useBoardProvider } from 'components/BoardProvider'
 import { Button } from 'components/Button'
-import { theme } from 'styles'
 import { statistics } from 'utils/wordle/statistics'
 
+import { Divider, Footer, Header, List } from './styled'
+
 export const Solved = () => {
-  const { board, solution, newGame } = useBoardProvider()
+  const { board, newGame } = useBoardProvider()
 
   if (!board) return null
 
   return (
-    <div css={css``}>
-      <h3
-        css={css`
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 2rem;
-          font-weight: normal;
-          margin: 0.5rem 0 3rem 0;
-          text-align: center;
-        `}
-      >
-        <span
-          css={css`
-            margin-right: 1rem;
-          `}
-        >
-          Solved
-        </span>
+    <>
+      <Header>
+        <span>Solved</span>
         🙌
-      </h3>
-      <p>
-        The solution was <b>{solution}</b>
-      </p>
-      <ul
-        css={css`
-          padding-left: 1.5rem;
+      </Header>
 
-          > li {
-            margin-bottom: 0.25rem;
-          }
-        `}
-      >
+      <List>
         <li>{statistics.getNumberOfGuesses(board)}</li>
         <li>{statistics.getNumberOfIncorrectLetters(board)}</li>
-      </ul>
-      <div
-        css={css`
-          width: 100%;
-          height: 1px;
-          background: ${theme.colors.dark};
-          margin: 1.5rem 0;
-        `}
-      />
-      <p>
-        <Button onClick={newGame}>Try another word</Button>
-      </p>
-    </div>
+      </List>
+
+      <Divider />
+
+      <Footer>
+        <Button onClick={newGame}>Try again</Button>
+      </Footer>
+    </>
   )
 }

@@ -1,7 +1,7 @@
 import { Spinner } from 'components/Spinner'
 import { useCallback, useState } from 'react'
 import { BoardStatus } from 'types/board'
-import { isRowEmpty } from 'utils/wordle/board'
+import { getLastFilledRow, isRowEmpty } from 'utils/wordle/board'
 
 import { useBoardProvider } from '../BoardProvider'
 import { useToastListener } from '../ToastProvider'
@@ -62,10 +62,6 @@ export function WordleBoard() {
             {row.map((tile, tileIndex) => {
               const [char, status] = tile
 
-              const isLastRowInBoard =
-                rowIndex ===
-                board.findIndex((boardRow) => isRowEmpty(boardRow)) - 1
-
               return (
                 <ZoomShakeAnimation
                   key={tileIndex}
@@ -74,7 +70,7 @@ export function WordleBoard() {
                   <SolvedBounceAnimation
                     tileIndex={tileIndex}
                     animate={
-                      isLastRowInBoard &&
+                      row === getLastFilledRow(board) &&
                       finalBoardStatus === BoardStatus.Solved
                     }
                     onAnimationEnd={(event) => {

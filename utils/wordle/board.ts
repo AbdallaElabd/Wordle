@@ -17,6 +17,14 @@ export const createEmptyBoard = (): Board => {
 export const isRowEmpty = (row: BoardRow): boolean =>
   row.every(([char]) => char === '')
 
+export const getLastFilledRow = (board: Board) => {
+  const lastFilledRow = board
+    .slice()
+    .reverse()
+    .find((row) => row.every((tile) => tile[0] !== ''))
+  return lastFilledRow
+}
+
 export const getBoardWithCurrentGuess = (
   board: Board | null,
   guess: string
