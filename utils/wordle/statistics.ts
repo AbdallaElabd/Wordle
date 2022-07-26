@@ -1,10 +1,11 @@
 import { Board, TileStatus } from 'types/board'
 
-import { findLettersByTileStatus, isRowEmpty } from './board'
+import { findLettersByTileStatus } from './board'
+import { rowIsEmpty } from './row'
 
 export const statistics = {
   getNumberOfGuesses(board: Board) {
-    const count = board.filter((row) => !isRowEmpty(row)).length
+    const count = board.filter((row) => !rowIsEmpty(row)).length
     if (count <= 3) {
       return `It only took you ${count} tries to guess the right word! 🎉`
     }

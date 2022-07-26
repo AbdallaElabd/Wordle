@@ -11,7 +11,19 @@ const fadeOut = keyframes`
   to { opacity: 0; }
 `
 
-const horizontalShake = keyframes`
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+`
+
+const shake = keyframes`
   0% {
     transform: translateX(0rem);
   }
@@ -26,18 +38,6 @@ const horizontalShake = keyframes`
   }
   100% {
     transform: translateX(1);
-  }
-`
-
-const pulse = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
   }
 `
 
@@ -71,32 +71,41 @@ const flip = (fromColor: ColorKeyframe, toColor: ColorKeyframe) => keyframes`
   }
 `
 
-const bounce = (maxOffset: number) => keyframes`
+const bounce = keyframes`
   0%, 20% {
     transform: translateY(0);
   }
   40% {
-    transform: translateY(-${maxOffset}px);
+    transform: translateY(-20px);
   }
   50% {
-    transform: translateY(${maxOffset / 4}px);
+    transform: translateY(5px);
   }
   60% {
-    transform: translateY(-${maxOffset / 2}px);
+    transform: translateY(-15px);
   }
   80% {
-    transform: translateY(${maxOffset / 10}px);
+    transform: translateY(2px);
   }
   100% {
     transform: translateY(0);
   }
 `
 
+const flash = keyframes`
+    0%,50%,to {
+        opacity: 1
+    }
+    25%,75% {
+        opacity: 0.25
+    }
+`
 export const animations = {
   fadeIn,
   fadeOut,
-  horizontalShake,
   pulse,
+  shake,
   flip,
-  bounce
+  bounce,
+  flash
 }

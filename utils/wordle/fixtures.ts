@@ -160,7 +160,7 @@ export const boardFixtures: Record<string, Board> = {
       ['i', TileStatus.CorrectPlace],
       ['r', TileStatus.NotInWord],
       ['e', TileStatus.CorrectPlace],
-      ['n', TileStatus.NoGuess]
+      ['n', TileStatus.NotInWord]
     ],
     [
       ['b', TileStatus.CorrectPlace],

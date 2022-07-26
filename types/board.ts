@@ -30,7 +30,7 @@ export type Letter =
 export enum TileStatus {
   CorrectPlace = '🟩',
   WrongPlace = '🟨',
-  NotInWord = '⬜️',
+  NotInWord = '⬛',
   NoGuess = ''
 }
 

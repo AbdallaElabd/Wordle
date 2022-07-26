@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react'
@@ -12,7 +13,8 @@ import { v4 as uuid } from 'uuid'
 
 type Toast = {
   id: string
-  error: string
+  isError: boolean
+  message: string
   // When set to true, it will trigger a fadeOut
   // animation and then remove the toast
   fadeOut: boolean
@@ -20,7 +22,7 @@ type Toast = {
 
 type ToastContextType = {
   toasts: Toast[]
-  addToast: (error: string) => void
+  addToast: (toast: { message: string; isError?: boolean }) => void
   listeners: MutableRefObject<Set<Function>>
   onToastFadeOutDone: (id: string) => void
 }
@@ -34,7 +36,9 @@ export const BoardContext = createContext<ToastContextType>({
 
 export const useToastProvider = () => useContext(BoardContext)
 
-export const useToastListener = (listener: Function) => {
+export type OnToastAddedListener = (toast: Toast) => void
+
+export const useToastListener = (listener: OnToastAddedListener) => {
   const { listeners } = useToastProvider()
 
   useEffect(() => {
@@ -49,25 +53,28 @@ export const useToastListener = (listener: Function) => {
 export const ToastProvider = ({ children }: PropsWithChildren) => {
   const [toasts, setToasts] = useState<Toast[]>([])
 
-  const listeners = useRef<Set<Function>>(new Set())
+  const listeners = useRef<Set<OnToastAddedListener>>(new Set())
 
-  const addToast = useCallback((error: string) => {
-    const id = uuid()
-    const toast = { id, error, fadeOut: false }
-    setToasts((currentToasts) => [...currentToasts, toast])
+  const addToast = useCallback(
+    ({ message, isError = false }: { message: string; isError?: boolean }) => {
+      const id = uuid()
+      const toast = { id, message, isError, fadeOut: false }
+      setToasts((currentToasts) => [...currentToasts, toast])
 
-    listeners.current.forEach((listener) => listener())
+      listeners.current.forEach((listener) => listener(toast))
 
-    // Schedule the toast for removal by triggering a fade out animation
-    setTimeout(() => {
-      setToasts((currentToasts) =>
-        currentToasts.map((toast) => {
-          if (toast.id !== id) return toast
-          return { ...toast, fadeOut: true }
-        })
-      )
-    }, 2000)
-  }, [])
+      // Schedule the toast for removal by triggering a fade out animation
+      setTimeout(() => {
+        setToasts((currentToasts) =>
+          currentToasts.map((toast) => {
+            if (toast.id !== id) return toast
+            return { ...toast, fadeOut: true }
+          })
+        )
+      }, 2000)
+    },
+    []
+  )
 
   // After the toast has faded out, remove it from the list
   const onToastFadeOutDone = useCallback((id: string) => {
@@ -76,11 +83,10 @@ export const ToastProvider = ({ children }: PropsWithChildren) => {
     )
   }, [])
 
-  return (
-    <BoardContext.Provider
-      value={{ toasts, addToast, listeners, onToastFadeOutDone }}
-    >
-      {children}
-    </BoardContext.Provider>
+  const value = useMemo(
+    () => ({ toasts, addToast, listeners, onToastFadeOutDone }),
+    [addToast, onToastFadeOutDone, toasts]
   )
+
+  return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>
 }

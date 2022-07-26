@@ -1,7 +1,7 @@
 import { boardFixtures } from './fixtures'
 import { statistics } from './statistics'
 
-describe('Statistics', () => {
+describe('statistics', () => {
   it('should get the number of guesses', () => {
     expect(
       statistics.getNumberOfGuesses(boardFixtures.solvedAfter3Attempts)

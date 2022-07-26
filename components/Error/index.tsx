@@ -49,7 +49,7 @@ export const Error = () => {
             `}
             onAnimationEnd={() => toast.fadeOut && onToastFadeOutDone(toast.id)}
           >
-            {toast.error}
+            {toast.message}
           </span>
         ))}
       </div>

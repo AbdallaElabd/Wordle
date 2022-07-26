@@ -1,21 +1,13 @@
 import { produce } from 'immer'
-import {
-  Board,
-  BoardRow,
-  BoardStatus,
-  BoardTile,
-  Letter,
-  TileStatus
-} from 'types/board'
+import { Board, BoardStatus, BoardTile, Letter, TileStatus } from 'types/board'
+
+import { rowIsEmpty } from './row'
 
 export const createEmptyBoard = (): Board => {
   const rows = Array<BoardTile>(5).fill(['', TileStatus.NoGuess])
   const board = Array(6).fill(rows)
   return board
 }
-
-export const isRowEmpty = (row: BoardRow): boolean =>
-  row.every(([char]) => char === '')
 
 export const getLastFilledRow = (board: Board) => {
   const lastFilledRow = board
@@ -31,7 +23,7 @@ export const getBoardWithCurrentGuess = (
 ): Board | null =>
   produce(board, (draft) => {
     if (!draft) return undefined
-    const firstEmptyRowIndex = draft.findIndex((row) => isRowEmpty(row))
+    const firstEmptyRowIndex = draft.findIndex((row) => rowIsEmpty(row))
     if (firstEmptyRowIndex >= 0) {
       draft[firstEmptyRowIndex] = guess
         .padEnd(5)
@@ -72,4 +64,20 @@ export const getBoardStatus = (board: Board): BoardStatus => {
 
   // All tiles are filled and there's no solved rows
   return BoardStatus.Failed
+}
+
+export const stringifyBoardState = (board: Board) => {
+  const numberOfGuesses =
+    getBoardStatus(board) === BoardStatus.Failed
+      ? 'X'
+      : board.filter((row) => !rowIsEmpty(row)).length
+
+  const text = `Wordle ${numberOfGuesses}/6`
+
+  const blocks = board
+    .filter((row) => !rowIsEmpty(row))
+    .map((row) => row.map((tile) => tile[1]).join(''))
+    .join('\n')
+
+  return [text, '', blocks].join('\n')
 }

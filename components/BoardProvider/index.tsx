@@ -86,7 +86,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         if (data.solution) setSolution(data.solution)
       },
       onError: (error) => {
-        addToast(error.message)
+        addToast({ message: error.message, isError: true })
       }
     })
 

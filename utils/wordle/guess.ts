@@ -1,21 +1,34 @@
 import { TRPCError } from '@trpc/server'
 import { gameDb } from 'db/game'
 import produce from 'immer'
-import { BoardRow, BoardStatus, Letter, TileStatus } from 'types/board'
+import {
+  BoardRow,
+  BoardStatus,
+  BoardTile,
+  Letter,
+  TileStatus
+} from 'types/board'
 
-import { getBoardStatus, isRowEmpty } from './board'
+import { getBoardStatus } from './board'
+import { rowIsEmpty } from './row'
 import { isWordInList } from './word'
 
-export const validateGuess = (guess: string, solution: string) => {
-  return (guess.split('') as Letter[]).reduce<BoardRow>((acc, char, index) => {
-    if (solution[index] === char) {
-      return [...acc, [char, TileStatus.CorrectPlace]]
+export const validateGuess = (guess: string, solution: string): BoardRow => {
+  const correctLetters = [...guess.split('')].filter(
+    (letter, index) => letter === solution[index]
+  )
+  const remainingLettersInSolution = [...solution.split('')].filter(
+    (letter) => !correctLetters.includes(letter)
+  )
+
+  return (guess.split('') as Letter[]).map<BoardTile>((char, index) => {
+    if (solution[index] === char) return [char, TileStatus.CorrectPlace]
+    // Don't take in account letters that have been correctly guessed
+    if (remainingLettersInSolution.includes(char)) {
+      return [char, TileStatus.WrongPlace]
     }
-    if (solution.includes(char)) {
-      return [...acc, [char, TileStatus.WrongPlace]]
-    }
-    return [...acc, [char, TileStatus.NotInWord]]
-  }, [])
+    return [char, TileStatus.NotInWord]
+  })
 }
 
 export const submitGuess = async (guess: string, gameId: string) => {
@@ -48,7 +61,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
 
   const newBoard = produce(game.board, (draft) => {
     if (!draft) return draft
-    const currentRow = draft?.findIndex((row) => isRowEmpty(row))
+    const currentRow = draft?.findIndex((row) => rowIsEmpty(row))
     if (currentRow != null && currentRow >= 0) {
       draft[currentRow] = guessResult
     }

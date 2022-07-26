@@ -1,11 +1,10 @@
 import { useBoardProvider } from 'components/BoardProvider'
-import { Button } from 'components/Button'
 import { statistics } from 'utils/wordle/statistics'
 
-import { Divider, Footer, Header, List } from './styled'
+import { Header, List } from './styled'
 
 export const Failed = () => {
-  const { board, solution, newGame } = useBoardProvider()
+  const { board, solution } = useBoardProvider()
 
   if (!board) return null
 
@@ -22,10 +21,6 @@ export const Failed = () => {
         <li>{statistics.getNumberOfCorrectGuesses(board)}</li>
         <li>{statistics.getNumberOfWrongPlaceGuesses(board)}</li>
       </List>
-      <Divider />
-      <Footer>
-        <Button onClick={newGame}>Try again</Button>
-      </Footer>
     </>
   )
 }

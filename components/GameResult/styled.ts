@@ -73,4 +73,5 @@ export const Divider = styled.div`
 export const Footer = styled.div`
   display: flex;
   justify-content: center;
+  gap: 1rem;
 `

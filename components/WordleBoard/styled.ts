@@ -17,17 +17,21 @@ export const Container = styled.div`
   animation: ${animations.fadeIn} 0.3s ease-in-out;
 `
 
-type RowProps = {
-  hasError: boolean
-}
-export const Row = styled.div<RowProps>`
+export const Row = styled.div`
   display: flex;
   justify-content: center;
   gap: ${tileSpacing};
-  ${({ hasError }) =>
-    hasError &&
+  flex: 1;
+`
+interface ShakeAnimationProps {
+  animate: boolean
+}
+
+export const ShakeAnimation = styled.div<ShakeAnimationProps>`
+  ${({ animate }) =>
+    animate &&
     css`
-      animation-name: ${animations.horizontalShake};
+      animation-name: ${animations.shake};
       animation-duration: 0.1s;
       animation-iteration-count: 4;
     `}
@@ -60,14 +64,14 @@ export const SolvedBounceAnimation = styled.div<SolvedBounceAnimationProps>`
   ${({ animate, tileIndex }) =>
     animate &&
     css`
-      animation-name: ${animations.bounce(20)};
+      animation-name: ${animations.bounce};
       animation-duration: 1s;
       animation-delay: ${tileIndex * 0.1}s;
       animation-timing-function: ease-in-out;
     `}
 `
 
-export const GuessingBounceAnimation = styled.div<{ animate: boolean }>`
+export const GuessingFlashAnimation = styled.div<{ animate: boolean }>`
   width: calc(100% + 2px);
   height: calc(100% + 2px);
   display: flex;
@@ -77,7 +81,7 @@ export const GuessingBounceAnimation = styled.div<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
     css`
-      animation: ${animations.bounce(5)} 0.7s infinite;
+      animation: ${animations.flash} 1.5s infinite;
     `}
 `
 
@@ -96,6 +100,7 @@ export const Tile = styled.div<TileProps>`
   font-weight: bold;
   font-size: 2rem;
   text-transform: capitalize;
+  user-select: none;
   border: 2px solid;
   background-color: ${theme.colors.guesses.noGuess.background};
   color: ${theme.colors.guesses.noGuess.foreground};
