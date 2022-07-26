@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { gameDb } from 'db/game'
+import { db } from 'db/game'
 import produce from 'immer'
 import {
   BoardRow,
@@ -39,7 +39,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
     })
   }
 
-  const game = await gameDb.getGame(gameId)
+  const game = await db.getGame(gameId)
 
   if (!game) {
     throw new TRPCError({
@@ -67,7 +67,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
     }
   })
 
-  await gameDb.updateGame(gameId, newBoard)
+  await db.updateGame(gameId, newBoard)
 
   const boardStatus = getBoardStatus(newBoard)
 

@@ -1,8 +1,8 @@
-import { Backspace } from 'components/SVG/Backspace'
+import { useBoardProvider } from 'components/BoardProvider'
+import { Backspace } from 'components/Icon/Backspace'
 import { BoardStatus, TileStatus } from 'types/board'
 import { getTileStatus } from 'utils/wordle/tile'
 
-import { useBoardProvider } from '../BoardProvider'
 import { Container, Row, StyledKey } from './styled'
 
 const keyboardLayout = [

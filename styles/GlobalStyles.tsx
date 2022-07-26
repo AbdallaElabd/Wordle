@@ -10,10 +10,6 @@ export function GlobalStyle() {
         :root {
           ${generateCssVariables(themeValues).join('')};
           font-size: 16px;
-
-          @media screen and (max-width: 400px) {
-            font-size: 14px;
-          }
         }
 
         // disable NextJS FOUC prevention

@@ -54,7 +54,8 @@ export const StyledKey = styled.span<StyledKeyProps>`
     }[status]
 
     return css`
-      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition: background-color ${theme.transition.normal},
+        color ${theme.transition.normal};
       background-color: ${colors.background};
       color: ${colors.foreground};
     `

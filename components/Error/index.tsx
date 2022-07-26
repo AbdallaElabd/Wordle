@@ -31,7 +31,7 @@ export const Error = () => {
           <span
             key={toast.id}
             css={css`
-              transition: opacity 0.3s ease-in-out;
+              transition: opacity ${theme.transition.normal};
               opacity: ${toast ? 1 : 0};
               padding: 0.75rem;
               font-size: 1.2rem;

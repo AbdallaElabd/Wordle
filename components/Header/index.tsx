@@ -2,6 +2,7 @@
 
 import { css } from '@emotion/react'
 import { theme } from 'styles'
+import { breakpoints } from 'styles/breakpoints'
 
 export const Header = () => {
   return (
@@ -17,9 +18,18 @@ export const Header = () => {
       <span
         css={css`
           font-family: ${theme.fonts.header};
-          font-size: 3rem;
           font-weight: bold;
           margin: 0;
+
+          font-size: 2rem;
+
+          ${breakpoints.md} {
+            font-size: 2.5rem;
+          }
+
+          ${breakpoints.lg} {
+            font-size: 3rem;
+          }
         `}
       >
         Wordle

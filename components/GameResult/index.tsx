@@ -1,10 +1,10 @@
+import { useBoardProvider } from 'components/BoardProvider'
 import { Button } from 'components/Button'
-import { Close } from 'components/SVG/Close'
+import { Close } from 'components/Icon/Close'
 import { useRef, useState } from 'react'
 import { useClickAway } from 'react-use'
 import { BoardStatus } from 'types/board'
 
-import { useBoardProvider } from '../BoardProvider'
 import { Failed } from './Failed'
 import { Solved } from './Solved'
 import { Backdrop, CloseIcon, Container, Divider, Footer } from './styled'

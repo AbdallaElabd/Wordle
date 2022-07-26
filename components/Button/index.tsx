@@ -36,7 +36,8 @@ export const Button = ({
         padding: 0.8rem 1rem;
         cursor: pointer;
 
-        transition: transform 0.2s, opacity 0.2s;
+        transition: transform ${theme.transition.fast},
+          opacity ${theme.transition.fast};
         &:hover {
           opacity: 0.9;
           transform: scale(1.05);

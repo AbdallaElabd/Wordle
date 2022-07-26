@@ -35,8 +35,8 @@ export const themeValues = {
   },
   transition: {
     slow: '1s ease-out',
-    normal: '0.3s ease-out',
-    fast: '0.1s ease-out'
+    normal: '0.35s ease-out',
+    fast: '0.15s ease-out'
   }
 } as const
 

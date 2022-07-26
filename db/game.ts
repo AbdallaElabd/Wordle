@@ -36,4 +36,4 @@ class DB {
   }
 }
 
-export const gameDb = new DB()
+export const db = new DB()

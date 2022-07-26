@@ -1,11 +1,14 @@
+import { useBoardProvider } from 'components/BoardProvider'
 import { Spinner } from 'components/Spinner'
+import {
+  OnToastAddedListener,
+  useToastListener
+} from 'components/ToastProvider'
 import { useCallback, useState } from 'react'
 import { BoardStatus } from 'types/board'
 import { getLastFilledRow } from 'utils/wordle/board'
 import { rowIsEmpty } from 'utils/wordle/row'
 
-import { useBoardProvider } from '../BoardProvider'
-import { OnToastAddedListener, useToastListener } from '../ToastProvider'
 import {
   Container,
   GuessingFlashAnimation,

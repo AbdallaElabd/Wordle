@@ -1,11 +1,11 @@
+import { BoardProvider } from 'components/BoardProvider'
+import { Error } from 'components/Error'
+import { GameResult } from 'components/GameResult'
+import { Header } from 'components/Header'
+import { OnScreenKeyboard } from 'components/OnScreenKeyboard'
+import { ToastProvider } from 'components/ToastProvider'
 import { WordleBoard } from 'components/WordleBoard'
 
-import { BoardProvider } from '../BoardProvider'
-import { Error } from '../Error'
-import { GameResult } from '../GameResult'
-import { Header } from '../Header'
-import { OnScreenKeyboard } from '../OnScreenKeyboard'
-import { ToastProvider } from '../ToastProvider'
 import { Container } from './styled'
 
 export function App() {

@@ -1,10 +1,10 @@
-import { gameDb } from 'db/game'
+import { db } from 'db/game'
 import { Board, BoardStatus } from 'types/board'
 
 import { getBoardStatus } from './board'
 
 export const getGame = async (id: string) => {
-  const game = await gameDb.getGame(id)
+  const game = await db.getGame(id)
 
   if (!game) return null
 
@@ -19,7 +19,7 @@ export const getGame = async (id: string) => {
 }
 
 export const createGame = async () => {
-  const game = await gameDb.createGame()
+  const game = await db.createGame()
   return {
     id: game.id,
     board: game.board as Board,
@@ -28,5 +28,5 @@ export const createGame = async () => {
 }
 
 export const deleteGame = (id: string) => {
-  return gameDb.deleteGame(id)
+  return db.deleteGame(id)
 }

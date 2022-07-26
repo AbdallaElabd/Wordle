@@ -35,7 +35,8 @@ export const CloseIcon = styled.button`
   cursor: pointer;
   color: ${theme.colors.foreground};
 
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  transition: opacity ${theme.transition.fast},
+    transform ${theme.transition.fast};
   opacity: 1;
   transform: scale(1);
   &:hover {

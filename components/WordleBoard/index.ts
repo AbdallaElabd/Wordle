@@ -1,1 +1,0 @@
-export { WordleBoard } from './WordleBoard'
