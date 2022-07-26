@@ -29,7 +29,6 @@ type Index = keyof typeof map
 export const Spinner = () => {
   return (
     <div
-      id="spinner here"
       css={css`
         width: 6rem;
         height: 6rem;

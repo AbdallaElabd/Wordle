@@ -19,6 +19,7 @@ export const Container = styled.div`
 
 export const Row = styled.div`
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: ${tileSpacing};
   flex: 1;
