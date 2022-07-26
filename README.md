@@ -1,12 +1,25 @@
-A Wordle clone with TRPC as the backend.
+A Wordle clone with [tRPC](https://trpc.io) & [Next.js](https://nextjs.org) as the backend.
 
-## Getting Started
+## Live
+https://wordle-abdallaelabd.vercel.app
 
-Add an ".env" file
+<img width="420" alt="image" src="https://user-images.githubusercontent.com/10912145/180907951-842aadf5-174d-4bdd-9aea-1c2351b4201e.png">
+
+
+---
+
+## Running it locally
+
+Clone the repository and install dependencies:
+
+```bash
+npm i
+```
+
+Add an ".env" file with a connection string to a MongoDB database:
 
 ```
-DATABASE_URL="CONNECTION_STRING
-"
+DATABASE_URL="CONNECTION_STRING"
 ```
 
 Run the development server:
