@@ -50,8 +50,17 @@ interface PulseAnimationProps {
 export const PulseAnimation = styled.div<PulseAnimationProps>`
   display: flex;
   flex: 1;
-  max-width: 4rem;
-  height: 4rem;
+
+  max-width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+
+  ${breakpoints.md} {
+    max-width: 4rem;
+    height: 4rem;
+    font-size: 2rem;
+  }
+
   ${({ animate }) =>
     animate &&
     css`
@@ -104,7 +113,6 @@ export const Tile = styled.div<TileProps>`
   font-family: ${theme.fonts.body};
   overflow: hidden;
   font-weight: bold;
-  font-size: 2rem;
   text-transform: capitalize;
   user-select: none;
   border: 2px solid;

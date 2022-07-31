@@ -21,11 +21,7 @@ export const Header = () => {
           font-weight: bold;
           margin: 0;
 
-          font-size: 2rem;
-
-          ${breakpoints.md} {
-            font-size: 2.5rem;
-          }
+          font-size: 2.5rem;
 
           ${breakpoints.lg} {
             font-size: 3rem;
