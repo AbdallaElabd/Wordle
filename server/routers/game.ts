@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+import { db } from 'db/game'
 import { Board, BoardStatus } from 'types/board'
 import { createGame, getGame } from 'utils/wordle/game'
 import { submitGuess } from 'utils/wordle/guess'
@@ -11,38 +12,46 @@ type StartGameResult = {
   id: string
   board: Board
   boardStatus: BoardStatus
+  userId: string
 }
 
 const gameRouter = createRouter()
   .query('startGame', {
     input: z.object({
+      userId: z.string().nullish(),
       gameId: z.string().nullish()
     }),
-    async resolve({ input: { gameId } }): Promise<StartGameResult> {
+    async resolve({ input: { gameId, userId } }): Promise<StartGameResult> {
+      if (!userId || !(await db.getUser(userId))) {
+        const user = await db.createUser()
+        userId = user.id
+      }
+
       if (gameId) {
-        const previousGame = await getGame(gameId)
+        const previousGame = await getGame(gameId, userId)
 
         if (previousGame) {
           return previousGame
         }
       }
 
-      return createGame()
+      return createGame(userId)
     }
   })
   .mutation('submitGuess', {
     input: z.object({
-      guess: z.string(),
-      gameId: z.string()
+      userId: z.string(),
+      gameId: z.string(),
+      guess: z.string()
     }),
-    async resolve({ input }) {
-      if (input.guess.length < 5) {
+    async resolve({ input: { userId, gameId, guess } }) {
+      if (guess.length < 5) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Not enough letters'
         })
       }
-      return await submitGuess(input.guess, input.gameId)
+      return await submitGuess(guess, gameId, userId)
     }
   })
 

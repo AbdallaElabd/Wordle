@@ -43,6 +43,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   const { addToast } = useToastProvider()
 
   const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId', null)
+  const [userId, setUserId] = useLocalStorageItem<string | null>('userId', null)
   const [board, setBoard] = useState<Board | null>(null)
   const [guess, setGuess] = useState<string>('')
   const [solution, setSolution] = useState<string | null>(null)
@@ -59,13 +60,14 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   }, [internalBoardStatus])
 
   const { refetch: createGame } = trpcHooks.useQuery(
-    ['game.startGame', { gameId }],
+    ['game.startGame', { gameId, userId }],
     {
       enabled: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
       onSuccess(data) {
+        setUserId(data.userId)
         setBoard(data.board)
         setInternalBoardStatus(data.boardStatus)
         setGameId(data.id)
@@ -79,23 +81,23 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const { mutate: mutateSubmitGuess, isLoading: isSubmittingGuess } =
     trpcHooks.useMutation('game.submitGuess', {
-      onSuccess: (data) => {
+      onSuccess(data) {
         setBoard(data.newBoard)
         setInternalBoardStatus(data.boardStatus)
         setGuess('')
         if (data.solution) setSolution(data.solution)
       },
-      onError: (error) => {
+      onError(error) {
         addToast({ message: error.message, isError: true })
       }
     })
 
   const submitGuess = useCallback(
     (guess: string) => {
-      if (!gameId || isSubmittingGuess) return
-      mutateSubmitGuess({ guess, gameId })
+      if (!userId || !gameId || isSubmittingGuess) return
+      mutateSubmitGuess({ guess, gameId, userId })
     },
-    [gameId, isSubmittingGuess, mutateSubmitGuess]
+    [gameId, isSubmittingGuess, mutateSubmitGuess, userId]
   )
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 

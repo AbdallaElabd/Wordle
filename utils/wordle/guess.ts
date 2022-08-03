@@ -31,7 +31,11 @@ export const validateGuess = (guess: string, solution: string): BoardRow => {
   })
 }
 
-export const submitGuess = async (guess: string, gameId: string) => {
+export const submitGuess = async (
+  guess: string,
+  gameId: string,
+  userId: string
+) => {
   if (!isWordInList(guess)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
@@ -39,7 +43,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
     })
   }
 
-  const game = await db.getGame(gameId)
+  const game = await db.getGame(gameId, userId)
 
   if (!game) {
     throw new TRPCError({
@@ -67,7 +71,7 @@ export const submitGuess = async (guess: string, gameId: string) => {
     }
   })
 
-  await db.updateGame(gameId, newBoard)
+  await db.updateGame(gameId, newBoard, userId)
 
   const boardStatus = getBoardStatus(newBoard)
 

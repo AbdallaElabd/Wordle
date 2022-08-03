@@ -3,8 +3,8 @@ import { Board, BoardStatus } from 'types/board'
 
 import { getBoardStatus } from './board'
 
-export const getGame = async (id: string) => {
-  const game = await db.getGame(id)
+export const getGame = async (id: string, userId: string) => {
+  const game = await db.getGame(id, userId)
 
   if (!game) return null
 
@@ -12,21 +12,23 @@ export const getGame = async (id: string) => {
 
   return {
     id,
+    userId: game.userId,
     board: game.board,
     boardStatus,
     ...(boardStatus === BoardStatus.Failed && { solution: game.solution })
   }
 }
 
-export const createGame = async () => {
-  const game = await db.createGame()
+export const createGame = async (userId: string) => {
+  const game = await db.createGame(userId)
   return {
     id: game.id,
     board: game.board as Board,
-    boardStatus: BoardStatus.InProgress
+    boardStatus: BoardStatus.InProgress,
+    userId
   }
 }
 
-export const deleteGame = (id: string) => {
-  return db.deleteGame(id)
+export const deleteGame = (id: string, userId: string) => {
+  return db.deleteGame(id, userId)
 }

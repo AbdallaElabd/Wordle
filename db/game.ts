@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server'
 import { Board } from 'types/board'
 import { createEmptyBoard } from 'utils/wordle/board'
 import { getRandomTargetWord } from 'utils/wordle/word'
@@ -5,8 +6,16 @@ import { getRandomTargetWord } from 'utils/wordle/word'
 import { prisma } from './client'
 
 class DB {
-  async getGame(id: string) {
-    const game = await prisma.game.findUnique({ where: { id } })
+  async getUser(id: string) {
+    return await prisma.user.findUnique({ where: { id } })
+  }
+
+  async createUser() {
+    return await prisma.user.create({ data: {} })
+  }
+
+  async getGame(id: string, userId: string) {
+    const game = await prisma.game.findFirst({ where: { id, userId } })
     if (!game) return null
     return {
       ...game,
@@ -14,22 +23,26 @@ class DB {
     }
   }
 
-  async createGame() {
+  async createGame(userId: string) {
     const board = createEmptyBoard()
     const solution = getRandomTargetWord()
     return await prisma.game.create({
-      data: { board, solution }
+      data: { board, solution, userId }
     })
   }
 
-  async updateGame(id: string, board: Board) {
+  async updateGame(id: string, board: Board, userId: string) {
+    const game = await this.getGame(id, userId)
+    if (!game) throw new TRPCError({ code: 'NOT_FOUND' })
     return await prisma.game.update({
       where: { id },
       data: { board }
     })
   }
 
-  async deleteGame(id: string) {
+  async deleteGame(id: string, userId: string) {
+    const game = await this.getGame(id, userId)
+    if (!game) throw new TRPCError({ code: 'NOT_FOUND' })
     return await prisma.game.delete({
       where: { id }
     })

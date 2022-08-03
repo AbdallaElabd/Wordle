@@ -11,4 +11,11 @@ model Game {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   solution String
   board    Json
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  Game Game[]
 }
