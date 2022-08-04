@@ -11,7 +11,9 @@ import {
 } from 'react'
 import { v4 as uuid } from 'uuid'
 
-type Toast = {
+const FADEOUT_DURATION = 2500
+
+export type Toast = {
   id: string
   isError: boolean
   message: string
@@ -71,7 +73,7 @@ export const ToastProvider = ({ children }: PropsWithChildren) => {
             return { ...toast, fadeOut: true }
           })
         )
-      }, 2000)
+      }, FADEOUT_DURATION)
     },
     []
   )
