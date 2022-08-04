@@ -10,6 +10,12 @@ class DB {
     return await prisma.user.findUnique({ where: { id } })
   }
 
+  async getUserGames(userId: string) {
+    return await prisma.game.findMany({
+      where: { userId }
+    })
+  }
+
   async createUser() {
     return await prisma.user.create({ data: {} })
   }

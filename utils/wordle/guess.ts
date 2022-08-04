@@ -36,6 +36,13 @@ export const submitGuess = async (
   gameId: string,
   userId: string
 ) => {
+  if (guess.length < 5) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Not enough letters'
+    })
+  }
+
   if (!isWordInList(guess)) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
