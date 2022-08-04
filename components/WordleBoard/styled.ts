@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { theme } from 'styles'
 import { animations } from 'styles/animations'
-import { breakpoints } from 'styles/breakpoints'
 import { TileStatus } from 'types/board'
 
 const tileSpacing = '0.4rem'
@@ -14,12 +13,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: stretch;
   gap: ${tileSpacing};
-  animation: ${animations.fadeIn} 0.3s ease-in-out;
-
   margin: 1.5rem;
-  ${breakpoints.md} {
-    margin: 3rem;
-  }
+  animation: ${animations.fadeIn} 0.3s ease-in-out;
 `
 
 export const Row = styled.div`
@@ -51,15 +46,11 @@ export const PulseAnimation = styled.div<PulseAnimationProps>`
   display: flex;
   flex: 1;
 
-  max-width: 3rem;
-  height: 3rem;
-  font-size: 1.5rem;
+  --size: clamp(3.5rem, 9vw, 4rem);
+  max-width: var(--size);
+  height: var(--size);
 
-  ${breakpoints.md} {
-    max-width: 4rem;
-    height: 4rem;
-    font-size: 2rem;
-  }
+  font-size: clamp(2rem, 2vw, 2rem);
 
   ${({ animate }) =>
     animate &&

@@ -3,24 +3,30 @@ import styled from '@emotion/styled'
 import { theme } from 'styles'
 import { TileStatus } from 'types/board'
 
+const GAP = '0.5rem'
+
 export const Container = styled.div`
+  background-color: ${theme.colors.background};
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  align-items: stretch;
+  gap: ${GAP};
+  align-items: center;
   margin-bottom: 2rem;
+  position: sticky;
+  bottom: 0;
+  padding: 1rem 0 calc(1em + env(safe-area-inset-bottom)) 0;
 `
 
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 0 0.5rem;
+  gap: ${GAP};
+  margin: 0 ${GAP};
 `
 
 interface StyledKeyProps {
-  width?: string
+  extraPadding?: string
   status?: TileStatus
   disabled: boolean
   isKeyboardRevealed?: boolean
@@ -28,11 +34,11 @@ interface StyledKeyProps {
 
 export const StyledKey = styled.span<StyledKeyProps>`
   font-family: ${theme.fonts.body};
+  --size: clamp(1.3rem, 7vw, 2.5rem);
+  width: calc(var(--size) + ${({ extraPadding }) => extraPadding ?? '0px'});
+  height: var(--size);
+  padding: 1.5rem 0;
   border-radius: 0.25rem;
-  padding: 0.75rem 0;
-  flex-grow: 1;
-  max-width: ${({ width }) => width ?? '2.5rem'};
-  height: 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;

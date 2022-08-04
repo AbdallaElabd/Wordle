@@ -32,7 +32,7 @@ export const OnScreenKeyboard = () => {
               return (
                 <StyledKey
                   key={key}
-                  width="3.5rem"
+                  extraPadding="1rem"
                   onClick={onBackspace}
                   disabled={disabled}
                 >
@@ -45,7 +45,7 @@ export const OnScreenKeyboard = () => {
               return (
                 <StyledKey
                   key={key}
-                  width="4.5rem"
+                  extraPadding="2rem"
                   onClick={onEnter}
                   disabled={disabled}
                 >
