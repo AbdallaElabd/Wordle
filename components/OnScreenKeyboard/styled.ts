@@ -11,7 +11,6 @@ export const Container = styled.div`
   flex-direction: column;
   gap: ${GAP};
   align-items: center;
-  margin-bottom: 2rem;
   position: sticky;
   bottom: 0;
   padding: 1rem 0 calc(1em + env(safe-area-inset-bottom)) 0;
@@ -48,15 +47,11 @@ export const StyledKey = styled.span<StyledKeyProps>`
   user-select: none;
 
   ${({ status = TileStatus.NoGuess }) => {
-    const noGuessColors = {
-      background: theme.colors.dark,
-      foreground: '#fff'
-    }
     const colors = {
-      [TileStatus.CorrectPlace]: theme.colors.guesses.correctPlace,
-      [TileStatus.WrongPlace]: theme.colors.guesses.wrongPlace,
-      [TileStatus.NotInWord]: theme.colors.guesses.notInWord,
-      [TileStatus.NoGuess]: noGuessColors
+      [TileStatus.CorrectPlace]: theme.colors.keyboard.correctPlace,
+      [TileStatus.WrongPlace]: theme.colors.keyboard.wrongPlace,
+      [TileStatus.NotInWord]: theme.colors.keyboard.notInWord,
+      [TileStatus.NoGuess]: theme.colors.keyboard.noGuess
     }[status]
 
     return css`

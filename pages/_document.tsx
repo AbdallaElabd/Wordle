@@ -1,5 +1,4 @@
 import { Head, Html, Main, NextScript } from 'next/document'
-import { GlobalStyle } from 'styles/GlobalStyles'
 
 export default function Document() {
   return (
@@ -20,7 +19,6 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
-        <GlobalStyle />
       </body>
     </Html>
   )

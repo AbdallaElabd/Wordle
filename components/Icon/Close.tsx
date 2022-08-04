@@ -1,13 +1,10 @@
-import { SVGProps } from 'react'
-
-export const Close = (props: SVGProps<SVGSVGElement>) => {
+export const CloseIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="24"
       viewBox="0 0 24 24"
       width="24"
-      {...props}
     >
       <path
         fill="currentColor"

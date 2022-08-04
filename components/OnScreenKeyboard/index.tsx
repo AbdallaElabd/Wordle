@@ -1,5 +1,5 @@
 import { useBoardProvider } from 'components/BoardProvider'
-import { Backspace } from 'components/Icon/Backspace'
+import { BackspaceIcon } from 'components/Icon'
 import { BoardStatus, TileStatus } from 'types/board'
 import { getTileStatus } from 'utils/wordle/tile'
 
@@ -36,7 +36,7 @@ export const OnScreenKeyboard = () => {
                   onClick={onBackspace}
                   disabled={disabled}
                 >
-                  <Backspace />
+                  <BackspaceIcon />
                 </StyledKey>
               )
             }

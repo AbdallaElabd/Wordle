@@ -48,7 +48,7 @@ export const Spinner = () => {
             css={css`
               width: 100%;
               height: 100%;
-              background-color: ${theme.colors.dark};
+              background-color: ${theme.colors.border};
               animation-name: ${animation};
               animation-duration: 1.3s;
               animation-iteration-count: infinite;

@@ -1,15 +1,32 @@
 import { css, Global } from '@emotion/react'
+import { useDarkModeProvider } from 'components/DarkModeProvider'
+import { useMemo } from 'react'
 
-import { theme, themeValues } from './theme'
+import { darkModeColors, theme, themeValues } from './theme'
 import { generateCssVariables } from './utils'
 
 export function GlobalStyle() {
+  const { isDarkMode } = useDarkModeProvider()
+  const cssVariables = useMemo(
+    () =>
+      generateCssVariables({
+        ...themeValues,
+        colors: isDarkMode ? darkModeColors : themeValues.colors
+      }).join(''),
+    [isDarkMode]
+  )
   return (
     <Global
       styles={css`
         :root {
-          ${generateCssVariables(themeValues).join('')};
+          ${cssVariables};
           font-size: 16px;
+        }
+
+        * {
+          transition: background-color ${theme.transition.fast},
+            border-color ${theme.transition.fast},
+            color ${theme.transition.fast};
         }
 
         // disable NextJS FOUC prevention

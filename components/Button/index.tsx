@@ -9,16 +9,12 @@ type ButtonProps = PropsWithChildren<
   } & ButtonHTMLAttributes<HTMLButtonElement>
 >
 
-const backgroundColor = {
-  success: theme.colors.guesses.correctPlace.background,
-  default: theme.colors.darker
-}
-
 export const Button = ({
   children,
   variant = 'default',
   ...rest
 }: ButtonProps) => {
+  const colors = theme.colors.button[variant ?? 'default']
   return (
     <button
       {...rest}
@@ -26,10 +22,10 @@ export const Button = ({
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        background: ${backgroundColor[variant]};
+        background: ${colors.background};
+        color: ${colors.foreground};
         box-shadow: 0 2px 2px 0 rgb(15 15 15 / 80%),
           0 4px 23px 0 rgb(0 0 0 / 20%);
-        color: ${theme.colors.foreground};
         font-size: 1rem;
         border: none;
         border-radius: 0.3rem;

@@ -38,8 +38,8 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   opacity: ${({ toast }) => (toast ? 1 : 0)};
   padding: 0.75rem;
   font-size: 1.2rem;
-  background-color: ${theme.colors.dark};
-  color: ${theme.colors.foreground};
+  background-color: ${theme.colors.toast.background};
+  color: ${theme.colors.toast.foreground};
   border-radius: 0.25rem;
   z-index: 1;
   ${({ toast }) =>

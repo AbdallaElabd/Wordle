@@ -13,8 +13,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: stretch;
   gap: ${tileSpacing};
-  margin: 1.5rem;
-  animation: ${animations.fadeIn} 0.3s ease-in-out;
+  margin: 1rem;
+  animation: ${animations.fadeIn} ${theme.transition.normal};
 `
 
 export const Row = styled.div`
