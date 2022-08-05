@@ -11,9 +11,14 @@ class DB {
   }
 
   async getUserGames(userId: string) {
-    return await prisma.game.findMany({
-      where: { userId }
+    const games = await prisma.game.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'asc' }
     })
+    return games.map((game) => ({
+      ...game,
+      board: game.board as Board
+    }))
   }
 
   async createUser() {
