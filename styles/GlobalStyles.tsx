@@ -1,5 +1,5 @@
 import { css, Global } from '@emotion/react'
-import { useDarkModeProvider } from 'components/DarkModeProvider'
+import { useDarkModeProvider } from 'client/providers/DarkModeProvider'
 import { useMemo } from 'react'
 
 import { darkModeColors, theme, themeValues } from './theme'

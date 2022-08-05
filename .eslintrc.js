@@ -29,6 +29,7 @@ module.exports = {
     // Linting
     indent: 'off',
     'space-before-function-paren': 'off',
+    'multiline-ternary': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
     'prettier/prettier': 'error',
