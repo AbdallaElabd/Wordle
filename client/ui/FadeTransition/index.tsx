@@ -3,7 +3,8 @@ import styled from '@emotion/styled'
 import { forwardRef, PropsWithChildren, useEffect, useState } from 'react'
 import { animations } from 'styles/animations'
 
-export const Container = styled.div<{ fadeOut: boolean }>`
+export const Container = styled.div<{ isOpen: boolean; fadeOut: boolean }>`
+  pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
   ${({ fadeOut }) =>
     fadeOut
       ? css`
@@ -14,32 +15,32 @@ export const Container = styled.div<{ fadeOut: boolean }>`
         `};
 `
 
-type FadeTransitionProps = PropsWithChildren<{
-  isOpen: boolean
-  className?: string
-}>
+export const FadeTransition = forwardRef<
+  HTMLDivElement,
+  PropsWithChildren<{
+    isOpen: boolean
+    className?: string
+  }>
+>(function FadeTransition({ children, className, isOpen }, ref) {
+  const [shouldRenderContent, setShouldRenderContent] = useState(false)
 
-export const FadeTransition = forwardRef<HTMLDivElement, FadeTransitionProps>(
-  function FadeTransitionComponent({ children, className, isOpen }, ref) {
-    const [shouldRenderContent, setShouldRenderContent] = useState(false)
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRenderContent(true)
+    }
+  }, [isOpen])
 
-    useEffect(() => {
-      if (isOpen) {
-        setShouldRenderContent(true)
-      }
-    }, [isOpen])
-
-    return (
-      <Container
-        ref={ref}
-        className={className}
-        fadeOut={!isOpen}
-        onAnimationEnd={() => {
-          if (!isOpen) setShouldRenderContent(false)
-        }}
-      >
-        {shouldRenderContent && children}
-      </Container>
-    )
-  }
-)
+  return (
+    <Container
+      ref={ref}
+      className={className}
+      isOpen={isOpen}
+      fadeOut={!isOpen}
+      onAnimationEnd={() => {
+        if (!isOpen) setShouldRenderContent(false)
+      }}
+    >
+      {shouldRenderContent && children}
+    </Container>
+  )
+})

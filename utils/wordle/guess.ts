@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { db } from 'db/game'
+import { db } from 'db/client'
 import produce from 'immer'
 import {
   BoardRow,

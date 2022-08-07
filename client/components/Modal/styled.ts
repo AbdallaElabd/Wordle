@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { FadeTransition } from 'client/ui'
 import { theme } from 'styles'
 
-export const Backdrop = styled.div`
+export const Backdrop = styled(FadeTransition)`
   z-index: 0;
   position: fixed;
   width: 100%;

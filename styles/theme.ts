@@ -103,9 +103,9 @@ export const themeValues = {
     body: "'Open Sans', sans-serif"
   },
   transition: {
-    slow: '1s ease-out',
-    normal: '0.35s ease-out',
-    fast: '0.15s ease-out'
+    slow: '1s ease-in-out',
+    normal: '0.35s ease-in-out',
+    fast: '0.15s ease-in-out'
   }
 } as const
 

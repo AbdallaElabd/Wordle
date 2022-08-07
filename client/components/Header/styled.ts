@@ -4,6 +4,7 @@ import { theme } from 'styles'
 import { animations } from 'styles/animations'
 
 export const HeaderButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   color: ${theme.colors.foreground};
@@ -17,10 +18,9 @@ export const HeaderButton = styled.button`
   animation: ${animations.fadeIn} ${theme.transition.normal};
 
   transition: transform ${theme.transition.fast},
-    opacity ${theme.transition.fast}, background-color ${theme.transition.fast};
+    background-color ${theme.transition.fast};
 
   &:hover {
-    opacity: 0.9;
     transform: scale(1.05);
   }
 `

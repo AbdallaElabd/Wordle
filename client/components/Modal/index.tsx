@@ -23,7 +23,7 @@ export const Modal: FC<ModalProps> = ({ children, isOpen, setIsOpen }) => {
 
   return (
     <>
-      {isOpen && <Backdrop />}
+      <Backdrop isOpen={isOpen} />
       <FadeInContainer ref={containerRef} isOpen={isOpen}>
         <CloseIconButton onClick={closeModal}>
           <CloseIcon />

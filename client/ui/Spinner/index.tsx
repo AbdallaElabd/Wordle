@@ -26,12 +26,16 @@ const map = {
 
 type Index = keyof typeof map
 
-export const Spinner = () => {
+type SpinnerProps = {
+  size?: string
+}
+
+export const Spinner = ({ size }: SpinnerProps = { size: '6rem ' }) => {
   return (
     <div
       css={css`
-        width: 6rem;
-        height: 6rem;
+        width: ${size};
+        height: ${size};
         margin: 100px auto;
         display: grid;
         grid-template-columns: repeat(3, 1fr);

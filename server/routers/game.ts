@@ -1,19 +1,9 @@
-import { TRPCError } from '@trpc/server'
-import { db } from 'db/game'
-import { Board, BoardStatus } from 'types/board'
-import { createGame, getGame } from 'utils/wordle/game'
+import { db } from 'db/client'
+import { BoardStatus } from 'types/board'
 import { submitGuess } from 'utils/wordle/guess'
 import { z } from 'zod'
 
 import { createRouter } from '../context'
-
-type StartGameResult = {
-  solution?: string | undefined
-  id: string
-  board: Board
-  boardStatus: BoardStatus
-  userId: string
-}
 
 const gameRouter = createRouter()
   .query('startGame', {
@@ -21,21 +11,36 @@ const gameRouter = createRouter()
       userId: z.string().nullish(),
       gameId: z.string().nullish()
     }),
-    async resolve({ input: { gameId, userId } }): Promise<StartGameResult> {
+    async resolve({ input: { gameId, userId } }) {
       if (!userId || !(await db.getUser(userId))) {
         const user = await db.createUser()
         userId = user.id
       }
 
       if (gameId) {
-        const previousGame = await getGame(gameId, userId)
+        const game = await db.getGame(gameId, userId)
 
-        if (previousGame) {
-          return previousGame
+        if (game) {
+          return {
+            id: game.id,
+            userId: game.userId,
+            board: game.board,
+            boardStatus: game.boardStatus,
+            ...(game.boardStatus === BoardStatus.Failed && {
+              solution: game.solution
+            })
+          }
         }
       }
 
-      return createGame(userId)
+      const newGame = await db.createGame(userId)
+
+      return {
+        id: newGame.id,
+        board: newGame.board,
+        boardStatus: newGame.boardStatus,
+        userId: newGame.userId
+      }
     }
   })
   .mutation('submitGuess', {

@@ -37,7 +37,7 @@ export const Statistics = () => {
   return (
     <>
       {!statistics ? (
-        <Spinner />
+        <Spinner size="4rem" />
       ) : (
         <Blocks>
           <Block>
