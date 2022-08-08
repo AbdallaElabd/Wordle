@@ -1,7 +1,32 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { theme } from 'styles'
 import { animations } from 'styles/animations'
+
+export const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas: 'empty header buttons';
+  width: 100%;
+  padding: 0.5rem;
+  border-bottom: 1px solid ${theme.colors.border};
+`
+
+export const Heading = styled.h1`
+  grid-area: header;
+  font-family: ${theme.fonts.header};
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(2.5rem, 6vw, 3rem);
+`
+
+export const HeaderButtons = styled.div`
+  grid-area: buttons;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1rem;
+`
 
 export const HeaderButton = styled.button`
   position: relative;
@@ -15,7 +40,7 @@ export const HeaderButton = styled.button`
   cursor: pointer;
   background-color: transparent;
 
-  animation: ${animations.fadeIn} ${theme.transition.normal};
+  animation: ${animations.fadeIn} 1s forwards;
 
   transition: transform ${theme.transition.fast},
     background-color ${theme.transition.fast};
@@ -23,82 +48,4 @@ export const HeaderButton = styled.button`
   &:hover {
     transform: scale(1.05);
   }
-`
-
-export const Blocks = styled.div`
-  animation: ${animations.fadeIn} ${theme.transition.normal};
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-`
-
-export const Block = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-`
-
-export const Heading = styled.span`
-  text-transform: uppercase;
-`
-
-export const Cells = styled.div`
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-`
-export const Cell = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  span:nth-of-type(1) {
-    font-size: 2rem;
-  }
-  span:nth-of-type(2) {
-    font-size: 1rem;
-  }
-`
-
-export const Charts = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 25rem;
-`
-
-export const ChartContainer = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-`
-
-export const ChartIndex = styled.span`
-  display: flex;
-  align-items: center;
-`
-
-export const Chart = styled.div<{ guess: number; maxGuess: number }>`
-  text-align: right;
-  padding: 0.2rem 0.5rem;
-  ${({ guess, maxGuess }) =>
-    guess &&
-    css`
-      width: ${(100 * guess) / maxGuess}%;
-    `};
-
-  ${({ guess }) => {
-    const colors =
-      guess === 0
-        ? theme.colors.guesses.notInWord
-        : theme.colors.guesses.correctPlace
-    return css`
-      background-color: ${colors.background};
-      color: ${colors.foreground};
-    `
-  }};
 `

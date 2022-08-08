@@ -33,11 +33,9 @@ describe('statistics', () => {
   it('should get the number of incorrectly placed letters', () => {
     expect(
       getNumberOfWrongPlaceGuesses(boardFixtures.solvedAfterAllAttempts)
-    ).toBe(
-      "You guessed 2 correct letters, but they weren't in the correct place."
-    )
+    ).toBe(null)
     expect(getNumberOfWrongPlaceGuesses(boardFixtures.failed)).toBe(
-      "You guessed 3 correct letters, but they weren't in the correct place."
+      "You guessed 1 correct letter, but they weren't in the correct place."
     )
   })
 

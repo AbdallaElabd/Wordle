@@ -1,8 +1,10 @@
 import { Modal } from 'client/components/Modal'
-import { useCopyBoardToClipboard } from 'client/hooks'
+import { useCopyToClipboard } from 'client/hooks'
 import { useBoardProvider } from 'client/providers/BoardProvider'
-import { Button, Divider, ShareIcon } from 'client/ui'
+import { useResultModalProvider } from 'client/providers/ResultModalProvider'
+import { Button, CopyIcon, Divider, ShareIcon } from 'client/ui'
 import { BoardStatus } from 'types/board'
+import { stringifyBoardState } from 'utils/wordle/board'
 
 import { Failed } from './Failed'
 import { Solved } from './Solved'
@@ -10,10 +12,21 @@ import { Statistics } from './Statistics'
 import { Footer } from './styled'
 
 export const ResultModal = () => {
-  const { isResultModalOpen, setIsResultModalOpen, finalBoardStatus, newGame } =
-    useBoardProvider()
+  const { board, userId, gameId } = useBoardProvider()
+  const { isResultModalOpen, setIsResultModalOpen } = useResultModalProvider()
+  const { finalBoardStatus, newGame } = useBoardProvider()
 
-  const copyBoard = useCopyBoardToClipboard()
+  const copyBoard = useCopyToClipboard(
+    !board ? null : stringifyBoardState(board),
+    '📋 Copied to the clipboard.'
+  )
+
+  const copyGameLink = useCopyToClipboard(
+    typeof window === 'undefined'
+      ? null
+      : `${window.location.origin}/game/${gameId}`,
+    '🔗 Copied link to game'
+  )
 
   const isGameDone = finalBoardStatus !== BoardStatus.InProgress
 
@@ -24,7 +37,7 @@ export const ResultModal = () => {
 
       {isGameDone && <Divider />}
 
-      <Statistics />
+      <Statistics userId={userId as string} />
 
       {isGameDone && (
         <>
@@ -32,8 +45,12 @@ export const ResultModal = () => {
           <Footer>
             <Button onClick={newGame}>Try again</Button>
             <Button variant="success" onClick={copyBoard}>
+              <span>Copy to clipboard</span>
+              <CopyIcon size={18} />
+            </Button>
+            <Button variant="success" onClick={copyGameLink}>
               <span>Share</span>
-              <ShareIcon />
+              <ShareIcon size={22} />
             </Button>
           </Footer>
         </>

@@ -24,9 +24,9 @@ export function GlobalStyle() {
         }
 
         * {
-          transition: background-color ${theme.transition.fast},
-            border-color ${theme.transition.fast},
-            color ${theme.transition.fast};
+          transition-property: background-color, border-color, color;
+          transition-duration: 350ms;
+          transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
         }
 
         // disable NextJS FOUC prevention

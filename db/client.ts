@@ -23,12 +23,18 @@ class DB {
     return await prisma.user.create({ data: {} })
   }
 
-  parseGame(game: Game) {
+  private parseGame(game: Game) {
     return {
       ...game,
       board: game.board as Board,
       boardStatus: getBoardStatus(game.board as Board)
     }
+  }
+
+  async getGameById(id: string) {
+    const game = await prisma.game.findFirst({ where: { id } })
+    if (!game) return null
+    return this.parseGame(game)
   }
 
   async getGame(id: string, userId: string) {

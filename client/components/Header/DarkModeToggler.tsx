@@ -18,7 +18,6 @@ const IconContainer = styled.div<{ isVisible: boolean }>`
   transition: transform ${theme.transition.slow},
     opacity ${theme.transition.slow};
   transform: translateY(${({ isVisible }) => (isVisible ? '0' : '200%')});
-  transition-delay: 250ms;
 `
 
 export const DarkModeToggler = () => {

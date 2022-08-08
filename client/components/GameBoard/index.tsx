@@ -1,11 +1,5 @@
-import { useBoardProvider } from 'client/providers/BoardProvider'
-import {
-  OnToastAddedListener,
-  useToastListener
-} from 'client/providers/ToastProvider'
 import { Spinner } from 'client/ui'
-import { useCallback, useState } from 'react'
-import { BoardStatus } from 'types/board'
+import { Board, BoardStatus } from 'types/board'
 import { getLastFilledRow } from 'utils/wordle/board'
 import { rowIsEmpty } from 'utils/wordle/row'
 
@@ -15,28 +9,45 @@ import {
   PulseAnimation,
   Row,
   ShakeAnimation,
+  Solution,
   SolvedBounceAnimation,
   Tile
 } from './styled'
 
-export function WordleBoard() {
-  const {
-    board,
-    boardWithCurrentGuess,
-    finalBoardStatus,
-    isSubmittingGuess,
-    onRowRevealed,
-    onSolvedAnimationDone
-  } = useBoardProvider()
-  const [hasError, setHasError] = useState(false)
+type GameBoardProps = {
+  board: Board | null
+  boardWithCurrentGuess: Board | null
+  boardNotFound?: boolean
+  solution: string | null
+  hasError: boolean
+  setHasError: (hasError: boolean) => void
+  finalBoardStatus: BoardStatus
+  isSubmittingGuess: boolean
+  onSolvedAnimationDone: () => void
+  onRowRevealed: (rowIndex: number) => void
+}
 
-  // When a toast is added, trigger the shake animation
-  const onToastAdded: OnToastAddedListener = useCallback((toast) => {
-    if (toast.isError) {
-      setHasError(true)
-    }
-  }, [])
-  useToastListener(onToastAdded)
+export function GameBoard({
+  board,
+  boardWithCurrentGuess,
+  solution,
+  boardNotFound = false,
+  finalBoardStatus,
+  hasError,
+  setHasError,
+  isSubmittingGuess,
+  onSolvedAnimationDone,
+  onRowRevealed
+}: GameBoardProps) {
+  if (boardNotFound) {
+    return (
+      <Container>
+        <Row>
+          <h1>Game not found</h1>
+        </Row>
+      </Container>
+    )
+  }
 
   if (!board || !boardWithCurrentGuess) {
     return (
@@ -50,6 +61,7 @@ export function WordleBoard() {
 
   return (
     <Container>
+      {solution && <Solution>Solution: {solution.toUpperCase()}</Solution>}
       {boardWithCurrentGuess.map((row, rowIndex) => {
         // The current guess is the first empty row in the original board
         const isCurrentGuessRow =

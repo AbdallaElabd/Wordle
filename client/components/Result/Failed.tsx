@@ -11,6 +11,9 @@ export const Failed = () => {
 
   if (!board) return null
 
+  const correctGuesses = getNumberOfCorrectGuesses(board)
+  const wrongPlaceGuesses = getNumberOfWrongPlaceGuesses(board)
+
   return (
     <>
       <Header>
@@ -21,8 +24,8 @@ export const Failed = () => {
         The solution was <b>{solution}</b>
       </p>
       <List>
-        <li>{getNumberOfCorrectGuesses(board)}</li>
-        <li>{getNumberOfWrongPlaceGuesses(board)}</li>
+        {correctGuesses && <li>{correctGuesses}</li>}
+        {wrongPlaceGuesses && <li>{wrongPlaceGuesses}</li>}
       </List>
     </>
   )

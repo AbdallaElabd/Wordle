@@ -1,4 +1,4 @@
-import { useLocalStorageItem } from 'client/providers/BoardProvider/useLocalStorageItem'
+import { useLocalStorageItem } from 'client/hooks'
 import {
   createContext,
   PropsWithChildren,

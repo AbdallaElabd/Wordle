@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server'
 import { db } from 'db/client'
 import { BoardStatus } from 'types/board'
 import { submitGuess } from 'utils/wordle/guess'
@@ -51,6 +52,18 @@ const gameRouter = createRouter()
     }),
     async resolve({ input: { userId, gameId, guess } }) {
       return await submitGuess(guess, gameId, userId)
+    }
+  })
+  .query('getGame', {
+    input: z.object({
+      gameId: z.string()
+    }),
+    async resolve({ input: { gameId } }) {
+      const game = await db.getGameById(gameId)
+      if (!game) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Game not found' })
+      }
+      return game
     }
   })
 

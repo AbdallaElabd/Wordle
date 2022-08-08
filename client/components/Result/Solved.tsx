@@ -11,6 +11,9 @@ export const Solved = () => {
 
   if (!board) return null
 
+  const guesses = getNumberOfGuesses(board)
+  const incorrectLetters = getNumberOfIncorrectLetters(board)
+
   return (
     <>
       <Header>
@@ -19,8 +22,8 @@ export const Solved = () => {
       </Header>
 
       <List>
-        <li>{getNumberOfGuesses(board)}</li>
-        <li>{getNumberOfIncorrectLetters(board)}</li>
+        {guesses && <li>{guesses}</li>}
+        {incorrectLetters && <li>{incorrectLetters}</li>}
       </List>
     </>
   )

@@ -1,5 +1,5 @@
-export const ChartIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 490.4 490.4">
+export const ChartIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 490.4 490.4">
     <g>
       <path
         fill="currentColor"

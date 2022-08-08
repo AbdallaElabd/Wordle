@@ -1,4 +1,5 @@
 import { useBoardProvider } from 'client/providers/BoardProvider'
+import { useResultModalProvider } from 'client/providers/ResultModalProvider'
 import { Spinner } from 'client/ui'
 import { useEffect } from 'react'
 import { trpcHooks } from 'utils/trpc'
@@ -13,13 +14,17 @@ import {
   ChartIndex,
   Charts,
   Heading
-} from '../Header/styled'
+} from './styled'
 
-export const Statistics = () => {
-  const { isResultModalOpen, userId } = useBoardProvider()
+type StatisticsProps = {
+  userId: string
+}
+
+export const Statistics = ({ userId }: StatisticsProps) => {
+  const { isResultModalOpen } = useResultModalProvider()
 
   const { data: statistics, refetch: loadStatistics } = trpcHooks.useQuery(
-    ['user.statistics', { userId: userId as string }],
+    ['user.statistics', { userId }],
     {
       enabled: false,
       refetchOnWindowFocus: false,

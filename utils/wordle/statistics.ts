@@ -3,10 +3,17 @@ import { Board, BoardStatus, TileStatus } from 'types/board'
 import { findLettersByTileStatus } from './board'
 import { rowIsEmpty } from './row'
 
+const pluralize = (count: number, singular: string, plural: string) =>
+  count === 1 ? singular : plural
+
 export const getNumberOfGuesses = (board: Board) => {
   const count = board.filter((row) => !rowIsEmpty(row)).length
   if (count <= 3) {
-    return `It only took you ${count} tries to guess the right word! 🎉`
+    return `It only took you ${count} ${pluralize(
+      count,
+      'try',
+      'tries'
+    )} to guess the right word! 🎉`
   }
   if (count <= 5) {
     return `It took you ${count} tries to guess the right word.`
@@ -16,19 +23,41 @@ export const getNumberOfGuesses = (board: Board) => {
 
 export const getNumberOfCorrectGuesses = (board: Board) => {
   const count = findLettersByTileStatus(board, TileStatus.CorrectPlace).size
-  return `You guessed ${count} correct letters.`
+  if (!count) return null
+  return `You guessed ${count} correct ${pluralize(
+    count,
+    'letter',
+    'letters'
+  )}.`
 }
 
 export const getNumberOfIncorrectLetters = (board: Board) => {
   const count = findLettersByTileStatus(board, TileStatus.NotInWord).size
-  return count <= 3
-    ? `You only guessed ${count} incorrect letters! 🎉`
-    : `You guessed ${count} incorrect letters.`
+  if (!count) return null
+  if (count <= 3) {
+    return `You only guessed ${count} incorrect ${pluralize(
+      count,
+      'letter',
+      'letters'
+    )}! 🎉`
+  }
+  return `You guessed ${count} incorrect letters.`
 }
 
 export const getNumberOfWrongPlaceGuesses = (board: Board) => {
-  const count = findLettersByTileStatus(board, TileStatus.WrongPlace).size
-  return `You guessed ${count} correct letters, but they weren't in the correct place.`
+  const correctLetters = findLettersByTileStatus(board, TileStatus.CorrectPlace)
+  const wrongPlaceLetters = findLettersByTileStatus(
+    board,
+    TileStatus.WrongPlace
+  )
+  correctLetters.forEach((letter) => wrongPlaceLetters.delete(letter))
+  const count = wrongPlaceLetters.size
+  if (!count) return null
+  return `You guessed ${wrongPlaceLetters.size} correct ${pluralize(
+    count,
+    'letter',
+    'letters'
+  )}, but they weren't in the correct place.`
 }
 
 export const getCurrentStreak = (boards: BoardStatus[]) => {

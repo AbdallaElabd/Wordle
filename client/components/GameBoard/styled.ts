@@ -7,6 +7,7 @@ import { TileStatus } from 'types/board'
 const tileSpacing = '0.4rem'
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -132,4 +133,15 @@ export const Tile = styled.div<TileProps>`
       `};
     `
   }};
+`
+
+export const Solution = styled.span`
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: ${animations.fadeIn} 1s forwards ease-in-out;
+  text-align: center;
+  margin-bottom: 1rem;
 `

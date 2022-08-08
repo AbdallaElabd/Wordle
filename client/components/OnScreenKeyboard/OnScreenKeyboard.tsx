@@ -1,6 +1,5 @@
-import { useBoardProvider } from 'client/providers/BoardProvider'
 import { BackspaceIcon } from 'client/ui'
-import { BoardStatus, TileStatus } from 'types/board'
+import { Board, TileStatus } from 'types/board'
 import { getTileStatus } from 'utils/wordle/tile'
 
 import { Container, Row, StyledKey } from './styled'
@@ -11,18 +10,23 @@ const keyboardLayout = [
   ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace']
 ] as const
 
-export const OnScreenKeyboard = () => {
-  const {
-    board,
-    revealedRows,
-    internalBoardStatus,
-    onKeyPress,
-    onBackspace,
-    onEnter
-  } = useBoardProvider()
+type OnScreenKeyboardProps = {
+  board: Board | null
+  revealedRows: Set<number>
+  onKeyPress: (key: string) => void
+  onBackspace: () => void
+  onEnter: () => void
+  disabled: boolean
+}
 
-  const disabled = internalBoardStatus !== BoardStatus.InProgress
-
+export const OnScreenKeyboard = ({
+  board,
+  revealedRows,
+  onKeyPress,
+  onBackspace,
+  onEnter,
+  disabled
+}: OnScreenKeyboardProps) => {
   return (
     <Container>
       {keyboardLayout.map((row, index) => (

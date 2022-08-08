@@ -1,6 +1,7 @@
 import { Board, BoardStatus } from 'types/board'
 
 export type BoardContextType = {
+  gameId: string | null
   userId: string | null
   board: Board | null
   solution: string | null
@@ -16,8 +17,6 @@ export type BoardContextType = {
   onKeyPress: (key: string) => void
   revealedRows: Set<number>
   onRowRevealed: (rowIndex: number) => void
-  isResultModalOpen: boolean
-  setIsResultModalOpen: (isOpen: boolean) => void
   onSolvedAnimationDone: () => void
   newGame: () => void
 }

@@ -1,3 +1,4 @@
+import { useLocalStorageItem } from 'client/hooks'
 import { useToastProvider } from 'client/providers/ToastProvider'
 import {
   createContext,
@@ -13,11 +14,12 @@ import { Board, BoardStatus } from 'types/board'
 import { trpcHooks } from 'utils/trpc'
 import { getBoardWithCurrentGuess } from 'utils/wordle/board'
 
+import { useResultModalProvider } from '../ResultModalProvider'
 import { BoardContextType } from './types'
 import { useKeyboard } from './useKeyboard'
-import { useLocalStorageItem } from './useLocalStorageItem'
 
 export const BoardContext = createContext<BoardContextType>({
+  gameId: null,
   userId: null,
   board: null,
   solution: null,
@@ -33,8 +35,6 @@ export const BoardContext = createContext<BoardContextType>({
   onKeyPress: () => {},
   revealedRows: new Set(),
   onRowRevealed: () => {},
-  isResultModalOpen: false,
-  setIsResultModalOpen: () => {},
   onSolvedAnimationDone: () => {},
   newGame: () => {}
 })
@@ -100,10 +100,10 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   )
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false)
+  const { setIsResultModalOpen } = useResultModalProvider()
   const onSolvedAnimationDone = useCallback(
     () => setIsResultModalOpen(true),
-    []
+    [setIsResultModalOpen]
   )
 
   const [revealedRows, { add: addRevealedRow, reset: resetRevealedRows }] =
@@ -119,7 +119,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
         setIsResultModalOpen(true)
       }
     },
-    [addRevealedRow, internalBoardStatus]
+    [addRevealedRow, internalBoardStatus, setIsResultModalOpen]
   )
 
   /**
@@ -137,7 +137,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       resetRevealedRows()
     })
     createGame()
-  }, [createGame, resetRevealedRows, setGameId])
+  }, [createGame, resetRevealedRows, setGameId, setIsResultModalOpen])
 
   /**
    * Keyboard handlers
@@ -170,6 +170,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const value = useMemo(
     () => ({
+      gameId,
       userId,
       board,
       solution,
@@ -185,12 +186,11 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       onKeyPress,
       revealedRows,
       onRowRevealed,
-      isResultModalOpen,
-      setIsResultModalOpen,
       onSolvedAnimationDone,
       newGame
     }),
     [
+      gameId,
       userId,
       board,
       solution,
@@ -205,8 +205,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       onKeyPress,
       revealedRows,
       onRowRevealed,
-      isResultModalOpen,
-      setIsResultModalOpen,
       onSolvedAnimationDone,
       newGame
     ]

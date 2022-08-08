@@ -1,6 +1,7 @@
 export * from './Backspace'
 export * from './Chart'
 export * from './Close'
+export * from './Copy'
 export * from './Moon'
 export * from './Share'
 export * from './Sun'
