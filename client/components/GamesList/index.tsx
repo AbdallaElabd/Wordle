@@ -39,15 +39,20 @@ export const GamesList = () => {
       <HeaderRow>
         <span>Solution</span>
         <span>Status</span>
-        <span>Date</span>
+        <span>Started at</span>
+        <span>Finished at</span>
         <span></span>
       </HeaderRow>
       {games.map((game) => {
         return (
           <Link href={`/game/${game.id}`} key={game.id}>
             <Row isLink>
-              <span>{!game.solution ? '-' : game.solution.toUpperCase()}</span>
               <span>
+                <span data-on-small-screens>Solution:</span>
+                {game.solution?.toUpperCase()}
+              </span>
+              <span>
+                <span data-on-small-screens>Status:</span>
                 {
                   {
                     [BoardStatus.Failed]: 'Failed',
@@ -56,8 +61,18 @@ export const GamesList = () => {
                   }[game.boardStatus]
                 }
               </span>
-              <span>{new Date(game.createdAt).toLocaleString()}</span>
               <span>
+                <span data-on-small-screens>Created at:</span>
+                {new Date(game.createdAt).toLocaleString()}
+              </span>
+              <span>
+                <span data-on-small-screens>Finished at:</span>
+                {!game.finishedAt
+                  ? '-'
+                  : new Date(game.finishedAt).toLocaleString()}
+              </span>
+              <span>
+                <span data-on-small-screens>View board</span>
                 <a>
                   <ArrowRight size={16} />
                 </a>
@@ -77,22 +92,44 @@ const Container = styled.div`
   animation: ${animations.fadeIn} 0.3s forwards;
 `
 
+const layout = css`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 0.75rem;
+  align-items: center;
+  column-gap: 2rem;
+
+  [data-on-small-screens] {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+
+    [data-on-small-screens] {
+      display: inline;
+      margin-right: 0.5rem;
+    }
+  }
+`
+
 const HeaderRow = styled.div`
   position: sticky;
   background-color: ${theme.colors.background};
   top: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 0.75rem;
-  align-items: center;
+  ${layout};
   border-bottom: 1px solid ${theme.colors.border};
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `
 
 const Row = styled.div<{ isLink?: boolean }>`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 0.75rem;
-  align-items: center;
+  ${layout};
 
   ${({ isLink }) =>
     isLink &&

@@ -16,18 +16,16 @@ class DB {
       where: { userId },
       orderBy: { createdAt: 'desc' }
     })
-    return games.map(this.parseGame).map((game) => ({
-      ...game,
-      solution:
-        game.boardStatus === BoardStatus.InProgress ? undefined : game.solution
-    }))
+    return games
+      .map(this.gameWithBoardStatus)
+      .filter((game) => game.boardStatus !== BoardStatus.InProgress)
   }
 
   async createUser() {
     return await prisma.user.create({ data: {} })
   }
 
-  private parseGame(game: Game) {
+  private gameWithBoardStatus(game: Game) {
     return {
       ...game,
       board: game.board as Board,
@@ -38,13 +36,13 @@ class DB {
   async getGameById(id: string) {
     const game = await prisma.game.findFirst({ where: { id } })
     if (!game) return null
-    return this.parseGame(game)
+    return this.gameWithBoardStatus(game)
   }
 
   async getGame(id: string, userId: string) {
     const game = await prisma.game.findFirst({ where: { id, userId } })
     if (!game) return null
-    return this.parseGame(game)
+    return this.gameWithBoardStatus(game)
   }
 
   async createGame(userId: string) {
@@ -53,15 +51,25 @@ class DB {
     const game = await prisma.game.create({
       data: { board, solution, userId }
     })
-    return this.parseGame(game)
+    return this.gameWithBoardStatus(game)
   }
 
-  async updateGame(id: string, board: Board, userId: string) {
+  async updateGame(
+    id: string,
+    userId: string,
+    board: Board,
+    status: BoardStatus | undefined
+  ) {
     const game = await this.getGame(id, userId)
     if (!game) throw new TRPCError({ code: 'NOT_FOUND' })
     await prisma.game.update({
       where: { id },
-      data: { board }
+      data: {
+        board,
+        ...(status !== BoardStatus.InProgress && {
+          finishedAt: new Date()
+        })
+      }
     })
   }
 

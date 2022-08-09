@@ -8,12 +8,13 @@ generator client {
 }
 
 model Game {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  solution  String
-  board     Json
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime  @default(now())
+  finishedAt DateTime? @default(now())
+  solution   String
+  board      Json
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
 }
 
 model User {

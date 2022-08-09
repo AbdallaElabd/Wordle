@@ -63,6 +63,12 @@ const gameRouter = createRouter()
       if (!game) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Game not found' })
       }
+      if (game.boardStatus === BoardStatus.InProgress) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Game is still in progress'
+        })
+      }
       return game
     }
   })

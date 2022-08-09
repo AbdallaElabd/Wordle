@@ -78,9 +78,9 @@ export const submitGuess = async (
     }
   })
 
-  await db.updateGame(gameId, newBoard, userId)
-
   const boardStatus = getBoardStatus(newBoard)
+
+  await db.updateGame(gameId, userId, newBoard, boardStatus)
 
   return {
     newBoard,
