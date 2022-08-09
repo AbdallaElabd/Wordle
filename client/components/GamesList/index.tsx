@@ -34,6 +34,14 @@ export const GamesList = () => {
     )
   }
 
+  if (!games.length) {
+    return (
+      <Container>
+        <p>No games yet.</p>
+      </Container>
+    )
+  }
+
   return (
     <Container>
       <HeaderRow>
