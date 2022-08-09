@@ -136,6 +136,7 @@ export const Tile = styled.div<TileProps>`
 `
 
 export const Solution = styled.span`
+  z-index: 1;
   position: absolute;
   display: flex;
   top: 0;
@@ -144,4 +145,9 @@ export const Solution = styled.span`
   animation: ${animations.fadeIn} 1s forwards ease-in-out;
   text-align: center;
   margin-bottom: 1rem;
+  background: ${theme.colors.toast.background};
+  color: ${theme.colors.toast.foreground};
+  box-shadow: 0 2px 5px 0 rgb(15 15 15 / 50%), 0 4px 24px 0 rgb(0 0 0 / 10%);
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.25rem;
 `

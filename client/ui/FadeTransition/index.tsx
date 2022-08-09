@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { forwardRef, PropsWithChildren, useEffect, useState } from 'react'
 import { animations } from 'styles/animations'
 
-export const Container = styled.div<{ isOpen: boolean; fadeOut: boolean }>`
+const Container = styled.div<{ isOpen: boolean; fadeOut: boolean }>`
   pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
   ${({ fadeOut }) =>
     fadeOut

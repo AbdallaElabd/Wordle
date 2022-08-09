@@ -30,7 +30,7 @@ type SpinnerProps = {
   size?: string
 }
 
-export const Spinner = ({ size }: SpinnerProps = { size: '6rem ' }) => {
+export const Spinner = ({ size = '6rem' }: SpinnerProps) => {
   return (
     <div
       css={css`

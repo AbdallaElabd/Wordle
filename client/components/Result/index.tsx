@@ -12,9 +12,8 @@ import { Statistics } from './Statistics'
 import { Footer } from './styled'
 
 export const ResultModal = () => {
-  const { board, userId, gameId } = useBoardProvider()
+  const { board, gameId, finalBoardStatus, newGame } = useBoardProvider()
   const { isResultModalOpen, setIsResultModalOpen } = useResultModalProvider()
-  const { finalBoardStatus, newGame } = useBoardProvider()
 
   const copyBoard = useCopyToClipboard(
     !board ? null : stringifyBoardState(board),
@@ -37,7 +36,7 @@ export const ResultModal = () => {
 
       {isGameDone && <Divider />}
 
-      <Statistics userId={userId as string} />
+      <Statistics />
 
       {isGameDone && (
         <>

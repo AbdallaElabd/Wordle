@@ -25,6 +25,7 @@ export const List = styled.ul`
 export const Footer = styled.div`
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
 `
 
@@ -88,6 +89,7 @@ export const ChartIndex = styled.span`
 export const Chart = styled.div<{ guess: number; maxGuess: number }>`
   text-align: right;
   padding: 0.2rem 0.5rem;
+  transition: width ${theme.transition.normal};
   ${({ guess, maxGuess }) =>
     guess &&
     css`

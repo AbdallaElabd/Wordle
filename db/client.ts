@@ -1,6 +1,6 @@
 import { Game } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
-import { Board } from 'types/board'
+import { Board, BoardStatus } from 'types/board'
 import { createEmptyBoard, getBoardStatus } from 'utils/wordle/board'
 import { getRandomTargetWord } from 'utils/wordle/word'
 
@@ -14,9 +14,13 @@ class DB {
   async getUserGames(userId: string) {
     const games = await prisma.game.findMany({
       where: { userId },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'desc' }
     })
-    return games.map(this.parseGame)
+    return games.map(this.parseGame).map((game) => ({
+      ...game,
+      solution:
+        game.boardStatus === BoardStatus.InProgress ? undefined : game.solution
+    }))
   }
 
   async createUser() {

@@ -24,7 +24,7 @@ export const Row = styled.div`
   margin: 0 ${GAP};
 `
 
-interface StyledKeyProps {
+type StyledKeyProps = {
   extraPadding?: string
   status?: TileStatus
   disabled: boolean

@@ -1,4 +1,4 @@
-import { Container } from 'client/components/App/styled'
+import { Container } from 'client/components/AppLayout'
 import { FinishedBoard } from 'client/components/FinishedBoard'
 import { Header } from 'client/components/Header'
 import { DisabledOnScreenKeyboard } from 'client/components/OnScreenKeyboard/DisabledOnScreenKeyboard'
@@ -17,7 +17,7 @@ export default function ViewGame() {
       <ResultModalProvider>
         <BoardViewerProvider gameId={gameId as string}>
           <Container>
-            <Header hideStatisticsButton />
+            <Header anonymous />
             <FinishedBoard />
             <DisabledOnScreenKeyboard />
           </Container>

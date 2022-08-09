@@ -1,6 +1,6 @@
 import { CloseIcon } from 'client/ui'
 import { FC, PropsWithChildren, useCallback, useRef } from 'react'
-import { useClickAway, useEvent } from 'react-use'
+import { useClickAway, useEvent, useLockBodyScroll } from 'react-use'
 
 import { Backdrop, CloseIconButton, FadeInContainer } from './styled'
 
@@ -11,6 +11,8 @@ type ModalProps = PropsWithChildren<{
 
 export const Modal: FC<ModalProps> = ({ children, isOpen, setIsOpen }) => {
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useLockBodyScroll(isOpen)
 
   const closeModal = useCallback(() => setIsOpen(false), [setIsOpen])
 

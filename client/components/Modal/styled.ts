@@ -17,7 +17,7 @@ export const FadeInContainer = styled(FadeTransition)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(10rem, 85vw, 40rem);
+  width: clamp(10rem, 90vw, 40rem);
   max-height: calc(100vh - 4rem);
   overflow: scroll;
 

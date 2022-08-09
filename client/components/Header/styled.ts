@@ -1,26 +1,34 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { theme } from 'styles'
 import { animations } from 'styles/animations'
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-areas: 'empty header buttons';
+  justify-content: space-between;
   width: 100%;
   padding: 0.5rem;
   border-bottom: 1px solid ${theme.colors.border};
 `
 
-export const Heading = styled.h1`
+export const LeftSection = styled.div`
+  display: flex;
+`
+
+export const Heading = styled.a`
+  cursor: pointer;
   grid-area: header;
   font-family: ${theme.fonts.header};
   font-weight: bold;
   margin: 0;
   text-align: center;
   font-size: clamp(2.5rem, 6vw, 3rem);
+  user-select: none;
 `
 
-export const HeaderButtons = styled.div`
+export const RightSection = styled.div`
   grid-area: buttons;
   display: flex;
   align-items: center;
@@ -28,7 +36,7 @@ export const HeaderButtons = styled.div`
   padding: 0 1rem;
 `
 
-export const HeaderButton = styled.button`
+const HeaderItem = css`
   position: relative;
   display: flex;
   align-items: center;
@@ -48,4 +56,12 @@ export const HeaderButton = styled.button`
   &:hover {
     transform: scale(1.05);
   }
+`
+
+export const HeaderButton = styled.button`
+  ${HeaderItem}
+`
+
+export const HeaderLink = styled.a`
+  ${HeaderItem}
 `

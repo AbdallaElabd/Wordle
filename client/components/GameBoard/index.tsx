@@ -51,7 +51,7 @@ export function GameBoard({
 
   if (!board || !boardWithCurrentGuess) {
     return (
-      <Container>
+      <Container key="loading">
         <Row>
           <Spinner />
         </Row>
@@ -60,7 +60,7 @@ export function GameBoard({
   }
 
   return (
-    <Container>
+    <Container key="board">
       {solution && <Solution>Solution: {solution.toUpperCase()}</Solution>}
       {boardWithCurrentGuess.map((row, rowIndex) => {
         // The current guess is the first empty row in the original board

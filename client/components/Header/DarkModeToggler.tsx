@@ -6,7 +6,7 @@ import { theme } from 'styles'
 
 import { HeaderButton } from './styled'
 
-const Button = styled(HeaderButton)`
+const StyledHeaderButton = styled(HeaderButton)`
   width: 40px;
   height: 40px;
   overflow: hidden;
@@ -34,7 +34,7 @@ export const DarkModeToggler = () => {
   if (!mounted) return null
 
   return (
-    <Button onClick={toggleDarkMode}>
+    <StyledHeaderButton onClick={toggleDarkMode}>
       <IconContainer isVisible={!isDarkMode}>
         <SunIcon />
       </IconContainer>
@@ -42,6 +42,6 @@ export const DarkModeToggler = () => {
       <IconContainer isVisible={isDarkMode}>
         <MoonIcon />
       </IconContainer>
-    </Button>
+    </StyledHeaderButton>
   )
 }

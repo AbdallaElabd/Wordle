@@ -16,15 +16,12 @@ import {
   Heading
 } from './styled'
 
-type StatisticsProps = {
-  userId: string
-}
-
-export const Statistics = ({ userId }: StatisticsProps) => {
+export const Statistics = () => {
+  const { userId } = useBoardProvider()
   const { isResultModalOpen } = useResultModalProvider()
 
   const { data: statistics, refetch: loadStatistics } = trpcHooks.useQuery(
-    ['user.statistics', { userId }],
+    ['user.statistics', { userId: userId as string }],
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -34,10 +31,10 @@ export const Statistics = ({ userId }: StatisticsProps) => {
   )
 
   useEffect(() => {
-    if (isResultModalOpen) {
+    if (userId && isResultModalOpen) {
       loadStatistics()
     }
-  }, [isResultModalOpen, loadStatistics])
+  }, [isResultModalOpen, loadStatistics, userId])
 
   return (
     <>
