@@ -1,4 +1,4 @@
-import { AnchorButton, Spinner } from 'client/ui'
+import { Button, Spinner } from 'client/ui'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { trpcHooks } from 'utils/trpc'
@@ -43,12 +43,12 @@ export const Statistics = () => {
     return (
       <Block>
         <Heading>Statistics</Heading>
-        <AnchorButton
+        <Button
           variant="success"
           onClick={() => setOpenModal(['auth', 'sign-in'])}
         >
           Login to see statistics about the games you play.
-        </AnchorButton>
+        </Button>
       </Block>
     )
   }

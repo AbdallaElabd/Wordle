@@ -20,7 +20,7 @@ export const Form = styled.form`
 `
 
 export const Heading = styled.h2`
-  margin: 0;
+  margin: 0 0 1rem 0;
 `
 
 export const Inputs = styled.div`
@@ -46,6 +46,7 @@ export const Input = styled.input<{ hasError: boolean }>`
 export const Buttons = styled.div`
   display: flex;
   justify-content: flex-end;
+  margin-top: 1rem;
   gap: 1rem;
 `
 

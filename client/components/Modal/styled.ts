@@ -3,7 +3,7 @@ import { FadeTransition } from 'client/ui'
 import { theme } from 'styles'
 
 export const Backdrop = styled(FadeTransition)`
-  z-index: 0;
+  z-index: 2;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -12,7 +12,7 @@ export const Backdrop = styled(FadeTransition)`
   background-color: rgba(0, 0, 0, 0.35);
 `
 export const FadeInContainer = styled(FadeTransition)`
-  z-index: 1;
+  z-index: 3;
   position: absolute;
   top: 50%;
   left: 50%;

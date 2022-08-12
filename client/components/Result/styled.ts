@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { AnchorButton } from 'client/ui'
 import { theme } from 'styles'
 import { animations } from 'styles/animations'
 
