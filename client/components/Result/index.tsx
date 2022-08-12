@@ -1,7 +1,6 @@
-import { Modal } from 'client/components/Modal'
+import { Modal, ModalType } from 'client/components/Modal'
 import { useCopyToClipboard } from 'client/hooks'
 import { useBoardProvider } from 'client/providers/BoardProvider'
-import { useResultModalProvider } from 'client/providers/ResultModalProvider'
 import { Button, CopyIcon, Divider, ShareIcon } from 'client/ui'
 import { BoardStatus } from 'types/board'
 import { stringifyBoardState } from 'utils/wordle/board'
@@ -13,7 +12,6 @@ import { Footer } from './styled'
 
 export const ResultModal = () => {
   const { board, gameId, finalBoardStatus, newGame } = useBoardProvider()
-  const { isResultModalOpen, setIsResultModalOpen } = useResultModalProvider()
 
   const copyBoard = useCopyToClipboard(
     !board ? null : stringifyBoardState(board),
@@ -30,7 +28,7 @@ export const ResultModal = () => {
   const isGameDone = finalBoardStatus !== BoardStatus.InProgress
 
   return (
-    <Modal isOpen={isResultModalOpen} setIsOpen={setIsResultModalOpen}>
+    <Modal name="results">
       {finalBoardStatus === BoardStatus.Solved && <Solved />}
       {finalBoardStatus === BoardStatus.Failed && <Failed />}
 

@@ -1,10 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { db } from 'db/client'
+import { protectEndpoint } from 'server/auth'
+import { authSchema } from 'server/authSchema'
 import { createRouter } from 'server/context'
 import { BoardStatus, TileStatus } from 'types/board'
 import { getBoardStatus } from 'utils/wordle/board'
 import { getCurrentStreak, getMaxStreak } from 'utils/wordle/statistics'
-import { z } from 'zod'
 
 const getUserGames = async (userId: string) => {
   const user = await db.getUser(userId)
@@ -19,20 +20,23 @@ const getUserGames = async (userId: string) => {
 }
 
 const userRouter = createRouter()
+  .mutation('signup', {
+    input: authSchema,
+    async resolve({ input: { email, password } }) {
+      await db.createUser(email, password)
+      return { message: 'User created.' }
+    }
+  })
   .query('history', {
-    input: z.object({
-      userId: z.string()
-    }),
-    async resolve({ input: { userId } }) {
+    async resolve({ ctx }) {
+      const userId = protectEndpoint(ctx)
       const games = await getUserGames(userId)
       return games
     }
   })
   .query('statistics', {
-    input: z.object({
-      userId: z.string()
-    }),
-    async resolve({ input: { userId } }) {
+    async resolve({ ctx }) {
+      const userId = protectEndpoint(ctx)
       const games = await getUserGames(userId)
 
       const finishedGames = games

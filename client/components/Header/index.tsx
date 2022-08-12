@@ -1,9 +1,10 @@
-import { useResultModalProvider } from 'client/providers/ResultModalProvider'
 import { ChartIcon, HistoryIcon } from 'client/ui'
 import { ArrowLeft } from 'client/ui/Icon/ArrowLeft'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
+import { useModalStore } from '../Modal'
 import { DarkModeToggler } from './DarkModeToggler'
 import {
   Container,
@@ -13,14 +14,12 @@ import {
   LeftSection,
   RightSection
 } from './styled'
+import { UserModalButton } from './UserModalButton'
 
-type HeaderProps = {
-  anonymous?: boolean
-}
-
-export const Header = ({ anonymous = false }: HeaderProps) => {
+export const Header = () => {
   const router = useRouter()
-  const { setIsResultModalOpen } = useResultModalProvider()
+  const session = useSession()
+  const { setOpenModal } = useModalStore()
   const showBackButton = router.pathname !== '/'
   return (
     <Container>
@@ -37,19 +36,21 @@ export const Header = ({ anonymous = false }: HeaderProps) => {
       </Link>
 
       <RightSection>
-        {!anonymous && (
+        {session.status && (
           <>
             <Link href="/history" passHref>
               <HeaderLink>
                 <HistoryIcon />
               </HeaderLink>
             </Link>
-            <HeaderButton onClick={() => setIsResultModalOpen(true)}>
+
+            <HeaderButton onClick={() => setOpenModal(['results', undefined])}>
               <ChartIcon />
             </HeaderButton>
           </>
         )}
         <DarkModeToggler />
+        <UserModalButton />
       </RightSection>
     </Container>
   )

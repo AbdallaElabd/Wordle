@@ -70,6 +70,11 @@ const colors = {
       background: palette.neutral,
       foreground: palette.white
     }
+  },
+  input: {
+    background: palette.white,
+    border: palette.neutralLight,
+    foreground: palette.black
   }
 }
 
@@ -93,6 +98,11 @@ export const darkModeColors = produce(colors, (draft) => {
   draft.toast = {
     background: palette.neutralLight,
     foreground: palette.white
+  }
+  draft.input = {
+    background: palette.white,
+    border: palette.black,
+    foreground: palette.black
   }
 })
 

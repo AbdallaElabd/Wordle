@@ -1,10 +1,13 @@
+import { useModalStore } from 'client/components/Modal'
 import { useLocalStorageItem } from 'client/hooks'
 import { useToastProvider } from 'client/providers/ToastProvider'
 import {
   createContext,
+  KeyboardEvent,
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from 'react'
@@ -14,13 +17,10 @@ import { Board, BoardStatus } from 'types/board'
 import { trpcHooks } from 'utils/trpc'
 import { getBoardWithCurrentGuess } from 'utils/wordle/board'
 
-import { useResultModalProvider } from '../ResultModalProvider'
 import { BoardContextType } from './types'
-import { useKeyboard } from './useKeyboard'
 
 export const BoardContext = createContext<BoardContextType>({
   gameId: null,
-  userId: null,
   board: null,
   solution: null,
   boardWithCurrentGuess: null,
@@ -45,7 +45,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   const { addToast } = useToastProvider()
 
   const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId', null)
-  const [userId, setUserId] = useLocalStorageItem<string | null>('userId', null)
   const [board, setBoard] = useState<Board | null>(null)
   const [guess, setGuess] = useState<string>('')
   const [solution, setSolution] = useState<string | null>(null)
@@ -59,14 +58,13 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   )
 
   const { refetch: createGame } = trpcHooks.useQuery(
-    ['game.startGame', { gameId, userId }],
+    ['game.startGame', { gameId }],
     {
       enabled: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
       onSuccess(data) {
-        setUserId(data.userId)
         setBoard(data.board)
         setInternalBoardStatus(data.boardStatus)
         setGameId(data.id)
@@ -93,17 +91,17 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
 
   const submitGuess = useCallback(
     (guess: string) => {
-      if (!userId || !gameId || isSubmittingGuess) return
-      mutateSubmitGuess({ guess, gameId, userId })
+      if (!gameId || isSubmittingGuess) return
+      mutateSubmitGuess({ guess, gameId })
     },
-    [gameId, isSubmittingGuess, mutateSubmitGuess, userId]
+    [gameId, isSubmittingGuess, mutateSubmitGuess]
   )
   const boardWithCurrentGuess = getBoardWithCurrentGuess(board, guess)
 
-  const { setIsResultModalOpen } = useResultModalProvider()
+  const { openModal, setOpenModal, closeModal } = useModalStore()
   const onSolvedAnimationDone = useCallback(
-    () => setIsResultModalOpen(true),
-    [setIsResultModalOpen]
+    () => setOpenModal(['results', undefined]),
+    [setOpenModal]
   )
 
   const [revealedRows, { add: addRevealedRow, reset: resetRevealedRows }] =
@@ -116,10 +114,10 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       // Failed games show the result modal right away, where as
       // solved games wait for the bounce animation to be completed.
       if (internalBoardStatus === BoardStatus.Failed) {
-        setIsResultModalOpen(true)
+        setOpenModal(['results', undefined])
       }
     },
-    [addRevealedRow, internalBoardStatus, setIsResultModalOpen]
+    [addRevealedRow, internalBoardStatus, setOpenModal]
   )
 
   /**
@@ -133,11 +131,11 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       setSolution(null)
       setInternalBoardStatus(BoardStatus.InProgress)
       setFinalBoardStatus(BoardStatus.InProgress)
-      setIsResultModalOpen(false)
+      closeModal()
       resetRevealedRows()
     })
     createGame()
-  }, [createGame, resetRevealedRows, setGameId, setIsResultModalOpen])
+  }, [closeModal, createGame, resetRevealedRows, setGameId])
 
   /**
    * Keyboard handlers
@@ -166,12 +164,32 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     submitGuess(guess)
   }, [disableInteractions, submitGuess, guess])
 
-  useKeyboard({ onKeyPress, onBackspace, onEnter })
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (openModal) return
+
+      if (event.code === 'Backspace') {
+        onBackspace()
+      } else if (event.code === 'Enter') {
+        onEnter()
+      } else {
+        const isValidKey =
+          event.code?.match(/Key[A-Z]/) != null &&
+          event.key.match(/([a-z]|(A-Z))/) != null &&
+          !event.metaKey
+
+        if (isValidKey) {
+          onKeyPress(event.key)
+        }
+      }
+    }
+    window.addEventListener('keydown', onKeyDown as any)
+    return () => window.removeEventListener('keydown', onKeyDown as any)
+  })
 
   const value = useMemo(
     () => ({
       gameId,
-      userId,
       board,
       solution,
       internalBoardStatus,
@@ -191,7 +209,6 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
     }),
     [
       gameId,
-      userId,
       board,
       solution,
       internalBoardStatus,

@@ -5,7 +5,6 @@ import {
   useToastListener
 } from 'client/providers/ToastProvider'
 import { useCallback, useState } from 'react'
-import { BoardStatus } from 'types/board'
 
 export function InProgressBoard() {
   const {

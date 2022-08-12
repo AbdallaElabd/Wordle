@@ -9,14 +9,10 @@ import { createRouter } from '../context'
 const gameRouter = createRouter()
   .query('startGame', {
     input: z.object({
-      userId: z.string().nullish(),
       gameId: z.string().nullish()
     }),
-    async resolve({ input: { gameId, userId } }) {
-      if (!userId || !(await db.getUser(userId))) {
-        const user = await db.createUser()
-        userId = user.id
-      }
+    async resolve({ input: { gameId }, ctx: { session } }) {
+      const userId = session?.user.id
 
       if (gameId) {
         const game = await db.getGame(gameId, userId)
@@ -46,11 +42,11 @@ const gameRouter = createRouter()
   })
   .mutation('submitGuess', {
     input: z.object({
-      userId: z.string(),
       gameId: z.string(),
       guess: z.string()
     }),
-    async resolve({ input: { userId, gameId, guess } }) {
+    async resolve({ input: { gameId, guess }, ctx: { session } }) {
+      const userId = session?.user.id
       return await submitGuess(guess, gameId, userId)
     }
   })

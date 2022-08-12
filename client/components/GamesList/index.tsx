@@ -16,7 +16,7 @@ export const GamesList = () => {
     data: games,
     isLoading,
     refetch: loadUserGames
-  } = trpcHooks.useQuery(['user.history', { userId: userId as string }], {
+  } = trpcHooks.useQuery(['user.history'], {
     enabled: false
   })
 

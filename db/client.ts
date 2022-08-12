@@ -1,5 +1,6 @@
 import { Game } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
+import { hash, verify } from 'argon2'
 import { Board, BoardStatus } from 'types/board'
 import { createEmptyBoard, getBoardStatus } from 'utils/wordle/board'
 import { getRandomTargetWord } from 'utils/wordle/word'
@@ -11,6 +12,31 @@ class DB {
     return await prisma.user.findUnique({ where: { id } })
   }
 
+  async getUserByEmail(email: string) {
+    const user = await prisma.user.findUnique({ where: { email } })
+    return user
+  }
+
+  async createUser(email: string, password: string) {
+    const existingUser = await prisma.user.findFirst({ where: { email } })
+    if (existingUser) {
+      throw new TRPCError({
+        code: 'CONFLICT',
+        message: 'Email is already in use.'
+      })
+    }
+    const hashed = await hash(password)
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashed
+      }
+    })
+
+    return user
+  }
+
   async getUserGames(userId: string) {
     const games = await prisma.game.findMany({
       where: { userId },
@@ -19,10 +45,6 @@ class DB {
     return games
       .map(this.gameWithBoardStatus)
       .filter((game) => game.boardStatus !== BoardStatus.InProgress)
-  }
-
-  async createUser() {
-    return await prisma.user.create({ data: {} })
   }
 
   private gameWithBoardStatus(game: Game) {
@@ -39,13 +61,13 @@ class DB {
     return this.gameWithBoardStatus(game)
   }
 
-  async getGame(id: string, userId: string) {
+  async getGame(id: string, userId: string | undefined) {
     const game = await prisma.game.findFirst({ where: { id, userId } })
     if (!game) return null
     return this.gameWithBoardStatus(game)
   }
 
-  async createGame(userId: string) {
+  async createGame(userId: string | undefined) {
     const board = createEmptyBoard()
     const solution = getRandomTargetWord()
     const game = await prisma.game.create({
@@ -56,7 +78,7 @@ class DB {
 
   async updateGame(
     id: string,
-    userId: string,
+    userId: string | undefined,
     board: Board,
     status: BoardStatus | undefined
   ) {

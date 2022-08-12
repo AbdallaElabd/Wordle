@@ -34,7 +34,7 @@ export const validateGuess = (guess: string, solution: string): BoardRow => {
 export const submitGuess = async (
   guess: string,
   gameId: string,
-  userId: string
+  userId: string | undefined
 ) => {
   if (guess.length < 5) {
     throw new TRPCError({

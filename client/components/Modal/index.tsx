@@ -1,22 +1,48 @@
 import { CloseIcon } from 'client/ui'
-import { FC, PropsWithChildren, useCallback, useRef } from 'react'
+import { FC, PropsWithChildren, useRef } from 'react'
 import { useClickAway, useEvent, useLockBodyScroll } from 'react-use'
+import create from 'zustand'
 
 import { Backdrop, CloseIconButton, FadeInContainer } from './styled'
 
+type TModal<Name extends string, Params = undefined> = [Name, Params]
+
+export type ModalType =
+  | TModal<'results'>
+  | TModal<'auth', 'sign-in' | 'sign-up'>
+
+type ModalStore = {
+  openModal: ModalType | null
+  setOpenModal: (openModal: ModalType) => void
+  closeModal: () => void
+}
+
+export const useModalStore = create<ModalStore>((set) => ({
+  openModal: null,
+  setOpenModal: (openModal: ModalType) => set({ openModal }),
+  closeModal: () => set({ openModal: null })
+}))
+
 type ModalProps = PropsWithChildren<{
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
+  name: ModalType['0']
 }>
 
-export const Modal: FC<ModalProps> = ({ children, isOpen, setIsOpen }) => {
+export const Modal: FC<ModalProps> = ({ children, name }) => {
+  const { openModal, closeModal } = useModalStore()
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const [openModalName] = openModal ?? []
+
+  const isOpen = openModalName === name
 
   useLockBodyScroll(isOpen)
 
-  const closeModal = useCallback(() => setIsOpen(false), [setIsOpen])
+  useClickAway(containerRef, () => {
+    if (isOpen) {
+      closeModal()
+    }
+  })
 
-  useClickAway(containerRef, closeModal)
   useEvent('keydown', (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       closeModal()
