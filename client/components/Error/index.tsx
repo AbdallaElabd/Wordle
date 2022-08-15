@@ -1,9 +1,9 @@
-import { useToastProvider } from 'client/providers/ToastProvider'
+import { useToastStore } from 'client/providers/ToastProvider'
 
 import { AbsoluteContainer, ToastContainer, ToastsList } from './styled'
 
 export const Error = () => {
-  const { toasts, onToastFadeOutDone } = useToastProvider()
+  const { toasts, onToastFadeOutDone } = useToastStore()
 
   return (
     <AbsoluteContainer>

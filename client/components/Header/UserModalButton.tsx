@@ -1,4 +1,4 @@
-import { useToastProvider } from 'client/providers/ToastProvider'
+import { useToastStore } from 'client/providers/ToastProvider'
 import { UserIcon } from 'client/ui'
 import { useCallback } from 'react'
 
@@ -7,7 +7,7 @@ import { Modal, useModalStore } from '../Modal'
 import { HeaderButton } from './styled'
 
 export const UserModalButton = () => {
-  const { addToast } = useToastProvider()
+  const addToast = useToastStore((state) => state.addToast)
   const { setOpenModal, closeModal } = useModalStore()
 
   const onSignedIn = useCallback(() => {

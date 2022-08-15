@@ -1,6 +1,6 @@
 import { useModalStore } from 'client/components/Modal'
 import { useLocalStorageItem } from 'client/hooks'
-import { useToastProvider } from 'client/providers/ToastProvider'
+import { useToastStore } from 'client/providers/ToastProvider'
 import {
   createContext,
   KeyboardEvent,
@@ -42,7 +42,7 @@ export const BoardContext = createContext<BoardContextType>({
 export const useBoardProvider = () => useContext(BoardContext)
 
 export const BoardProvider = ({ children }: PropsWithChildren) => {
-  const { addToast } = useToastProvider()
+  const addToast = useToastStore((state) => state.addToast)
 
   const [gameId, setGameId] = useLocalStorageItem<string | null>('gameId', null)
   const [board, setBoard] = useState<Board | null>(null)

@@ -1,4 +1,4 @@
-import { produce } from 'immer'
+import produce from 'immer'
 import { Board, BoardStatus, BoardTile, Letter, TileStatus } from 'types/board'
 
 import { rowIsEmpty } from './row'

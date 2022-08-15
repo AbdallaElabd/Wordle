@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Toast } from 'client/providers/ToastProvider'
+import { type Toast } from 'client/providers/ToastProvider'
 import { theme } from 'styles'
 import { animations } from 'styles/animations'
 

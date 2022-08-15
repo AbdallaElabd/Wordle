@@ -1,8 +1,8 @@
-import { useToastProvider } from 'client/providers/ToastProvider'
+import { useToastStore } from 'client/providers/ToastProvider'
 import { useCallback } from 'react'
 
 export const useCopyToClipboard = (text: string | null, message: string) => {
-  const { addToast } = useToastProvider()
+  const addToast = useToastStore((state) => state.addToast)
 
   return useCallback(() => {
     if (!text) return
