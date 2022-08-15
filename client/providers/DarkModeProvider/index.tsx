@@ -1,43 +1,19 @@
-import { useLocalStorageItem } from 'client/hooks'
 import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useMemo
-} from 'react'
+  parseValueFromLocalStorage,
+  saveValueInLocalStorage
+} from 'client/hooks'
+import create from 'zustand'
 
-type DarkModeContextType = {
+type DarkModeStore = {
   isDarkMode: boolean
   toggleDarkMode: () => void
 }
-const DarkModeContext = createContext<DarkModeContextType>({
-  isDarkMode: true,
-  toggleDarkMode: () => {}
-})
-
-export const useDarkModeProvider = () => useContext(DarkModeContext)
-
-export const DarkModeProvider = ({ children }: PropsWithChildren) => {
-  const [isDarkMode, setIsDarkMode] = useLocalStorageItem<boolean>(
-    'dark-mode',
-    true
-  )
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(!isDarkMode)
-  }, [isDarkMode, setIsDarkMode])
-
-  const value = useMemo(
-    () => ({
-      isDarkMode,
-      toggleDarkMode
-    }),
-    [isDarkMode, toggleDarkMode]
-  )
-  return (
-    <DarkModeContext.Provider value={value}>
-      {children}
-    </DarkModeContext.Provider>
-  )
-}
+export const useDarkModeStore = create<DarkModeStore>((set) => ({
+  isDarkMode: parseValueFromLocalStorage<boolean>('dark-mode', true),
+  toggleDarkMode: () =>
+    set((state) => {
+      const isDarkMode = !state.isDarkMode
+      saveValueInLocalStorage('dark-mode', isDarkMode)
+      return { isDarkMode }
+    })
+}))

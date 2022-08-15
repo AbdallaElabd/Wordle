@@ -4,7 +4,7 @@ const getLocalStorage = () => {
   return typeof window === 'undefined' ? undefined : window.localStorage
 }
 
-const getInitialValue = <T>(key: string, defaultValue: T) => {
+export const parseValueFromLocalStorage = <T>(key: string, defaultValue: T) => {
   const storage = getLocalStorage()
   if (!storage) return defaultValue
 
@@ -20,22 +20,25 @@ const getInitialValue = <T>(key: string, defaultValue: T) => {
   }
 }
 
+export const saveValueInLocalStorage = <T>(key: string, newValue: T) => {
+  const storage = getLocalStorage()
+  storage?.setItem(key, JSON.stringify(newValue) as string)
+}
+
 export const useLocalStorageItem = <T>(
   key: string,
   defaultValue: T
 ): [T, (value: T) => void] => {
-  const storage = getLocalStorage()
-
   const [value, setValue] = useState<T>(() =>
-    getInitialValue(key, defaultValue)
+    parseValueFromLocalStorage(key, defaultValue)
   )
 
   const setter = useCallback(
     (newValue: T) => {
-      storage?.setItem(key, JSON.stringify(newValue) as unknown as string)
+      saveValueInLocalStorage(key, newValue)
       setValue(newValue)
     },
-    [key, storage]
+    [key]
   )
 
   return useMemo(() => [value, setter], [setter, value])

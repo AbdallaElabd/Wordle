@@ -5,25 +5,22 @@ import { InProgressBoard } from 'client/components/InProgressBoard'
 import { EnabledOnScreenKeyboard } from 'client/components/OnScreenKeyboard/EnabledOnScreenKeyboard'
 import { ResultModal } from 'client/components/Result'
 import { BoardProvider } from 'client/providers/BoardProvider'
-import { DarkModeProvider } from 'client/providers/DarkModeProvider'
 import { ToastProvider } from 'client/providers/ToastProvider'
 import { GlobalStyle } from 'styles/GlobalStyles'
 
 export default function App() {
   return (
-    <DarkModeProvider>
-      <ToastProvider>
-        <BoardProvider>
-          <Container>
-            <Header />
-            <Error />
-            <InProgressBoard />
-            <EnabledOnScreenKeyboard />
-            <ResultModal />
-          </Container>
-          <GlobalStyle />
-        </BoardProvider>
-      </ToastProvider>
-    </DarkModeProvider>
+    <ToastProvider>
+      <BoardProvider>
+        <Container>
+          <Header />
+          <Error />
+          <InProgressBoard />
+          <EnabledOnScreenKeyboard />
+          <ResultModal />
+        </Container>
+        <GlobalStyle />
+      </BoardProvider>
+    </ToastProvider>
   )
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useDarkModeProvider } from 'client/providers/DarkModeProvider'
+import { useDarkModeStore } from 'client/providers/DarkModeProvider'
 import { MoonIcon, SunIcon } from 'client/ui'
 import { useEffect, useState } from 'react'
 import { theme } from 'styles'
@@ -21,7 +21,7 @@ const IconContainer = styled.div<{ isVisible: boolean }>`
 `
 
 export const DarkModeToggler = () => {
-  const { isDarkMode, toggleDarkMode } = useDarkModeProvider()
+  const { isDarkMode, toggleDarkMode } = useDarkModeStore()
 
   const [mounted, setMounted] = useState(false)
 

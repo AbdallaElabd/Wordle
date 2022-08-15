@@ -1,12 +1,12 @@
 import { css, Global } from '@emotion/react'
-import { useDarkModeProvider } from 'client/providers/DarkModeProvider'
+import { useDarkModeStore } from 'client/providers/DarkModeProvider'
 import { useMemo } from 'react'
 
 import { darkModeColors, theme, themeValues } from './theme'
 import { generateCssVariables } from './utils'
 
 export function GlobalStyle() {
-  const { isDarkMode } = useDarkModeProvider()
+  const { isDarkMode } = useDarkModeStore()
   const cssVariables = useMemo(
     () =>
       generateCssVariables({
