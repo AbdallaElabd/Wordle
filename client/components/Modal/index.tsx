@@ -1,6 +1,7 @@
+import { useLockScroll } from 'client/hooks/useLockScroll'
 import { CloseIcon } from 'client/ui'
 import { FC, PropsWithChildren, useRef } from 'react'
-import { useClickAway, useEvent, useLockBodyScroll } from 'react-use'
+import { useClickAway, useEvent } from 'react-use'
 import create from 'zustand'
 
 import { Backdrop, CloseIconButton, FadeInContainer } from './styled'
@@ -35,7 +36,7 @@ export const Modal: FC<ModalProps> = ({ children, name }) => {
 
   const isOpen = openModalName === name
 
-  useLockBodyScroll(isOpen)
+  useLockScroll(isOpen)
 
   useClickAway(containerRef, () => {
     if (isOpen) {
