@@ -6,7 +6,6 @@ import { theme } from 'styles'
 import { type ButtonProps } from '.'
 
 export const SpinnerContainer = styled.div`
-  z-index: 1;
   border-radius: 0.3rem;
   position: absolute;
   width: 100%;

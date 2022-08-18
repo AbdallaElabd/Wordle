@@ -20,9 +20,11 @@ export const Failed = () => {
         <span>{"You're out of guesses"}</span>
         😔
       </Header>
-      <p>
-        The solution was <b>{solution}</b>
-      </p>
+      {solution && (
+        <p>
+          The solution was <b>{solution.toUpperCase()}</b>
+        </p>
+      )}
       <List>
         {correctGuesses && <li>{correctGuesses}</li>}
         {wrongPlaceGuesses && <li>{wrongPlaceGuesses}</li>}

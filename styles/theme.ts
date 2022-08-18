@@ -116,6 +116,12 @@ export const themeValues = {
     slow: '1s ease-in-out',
     normal: '0.35s ease-in-out',
     fast: '0.15s ease-in-out'
+  },
+  layer: {
+    base: '1',
+    backdrop: '2',
+    modal: '3',
+    toast: '4'
   }
 } as const
 

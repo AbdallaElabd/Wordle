@@ -5,7 +5,7 @@ import { theme } from 'styles'
 import { animations } from 'styles/animations'
 
 export const AbsoluteContainer = styled.div`
-  z-index: 2;
+  z-index: ${theme.layer.toast};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,7 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   background-color: ${theme.colors.toast.background};
   color: ${theme.colors.toast.foreground};
   border-radius: 0.25rem;
-  z-index: 1;
+  z-index: ${theme.layer.toast};
   ${({ toast }) =>
     !toast.fadeOut
       ? css`

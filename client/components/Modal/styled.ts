@@ -3,28 +3,29 @@ import { FadeTransition } from 'client/ui'
 import { theme } from 'styles'
 
 export const Backdrop = styled(FadeTransition)`
-  z-index: 2;
+  z-index: ${theme.layer.backdrop};
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
 `
 export const FadeInContainer = styled(FadeTransition)`
-  z-index: 3;
+  z-index: ${theme.layer.modal};
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: clamp(10rem, 90vw, 40rem);
-  max-height: calc(100vh - 4rem);
+  max-height: calc(var(--app-height) - 4rem);
   overflow: scroll;
 
   padding: 2rem;
   background-color: ${theme.colors.background};
   border-radius: 0.5rem;
-  box-shadow: 0 4px 23px 0 rgb(0 0 0 / 20%);
+  box-shadow: 0 4px 23px 0 rgb(0 0 0 / 60%);
 `
 
 export const CloseIconButton = styled.button`

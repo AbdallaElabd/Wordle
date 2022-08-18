@@ -1,5 +1,4 @@
 import { Spinner } from 'client/ui'
-import { RefCallback } from 'react'
 import { Board, BoardStatus } from 'types/board'
 import { getLastFilledRow } from 'utils/wordle/board'
 import { rowIsEmpty } from 'utils/wordle/row'
@@ -10,7 +9,6 @@ import {
   PulseAnimation,
   Row,
   ShakeAnimation,
-  Solution,
   SolvedBounceAnimation,
   Tile
 } from './styled'
@@ -31,7 +29,6 @@ type GameBoardProps = {
 export function GameBoard({
   board,
   boardWithCurrentGuess,
-  solution,
   boardNotFound = false,
   finalBoardStatus,
   hasError,
@@ -62,9 +59,6 @@ export function GameBoard({
 
   return (
     <Container key="board">
-      {finalBoardStatus !== BoardStatus.InProgress && solution && (
-        <Solution>Solution: {solution.toUpperCase()}</Solution>
-      )}
       {boardWithCurrentGuess.map((row, rowIndex) => {
         // The current guess is the first empty row in the original board
         const isCurrentGuessRow =
