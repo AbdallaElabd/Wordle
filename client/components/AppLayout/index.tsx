@@ -6,6 +6,6 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: stretch;
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--app-height);
   background-color: ${theme.colors.background};
 `

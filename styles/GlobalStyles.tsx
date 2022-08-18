@@ -19,6 +19,7 @@ export function GlobalStyle() {
     <Global
       styles={css`
         :root {
+          --app-height: 100vh;
           ${cssVariables};
           font-size: 16px;
         }
@@ -56,7 +57,7 @@ export function GlobalStyle() {
         html,
         body,
         #__next {
-          min-height: 100vh;
+          min-height: var(--app-height, 100%);
         }
 
         #__next {
