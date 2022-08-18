@@ -48,6 +48,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
   const [board, setBoard] = useState<Board | null>(null)
   const [guess, setGuess] = useState<string>('')
   const [solution, setSolution] = useState<string | null>(null)
+  const [error, hasError] = useState<boolean>(false)
 
   const [internalBoardStatus, setInternalBoardStatus] = useState<BoardStatus>(
     BoardStatus.InProgress
@@ -195,6 +196,8 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       internalBoardStatus,
       finalBoardStatus,
       boardWithCurrentGuess,
+      error,
+      hasError,
       guess,
       setGuess,
       submitGuess,
@@ -208,6 +211,7 @@ export const BoardProvider = ({ children }: PropsWithChildren) => {
       newGame
     }),
     [
+      error,
       gameId,
       board,
       solution,

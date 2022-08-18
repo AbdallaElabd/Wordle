@@ -1,9 +1,9 @@
-import { useBoardViewerProvider } from 'client/providers/BoardViewerProvider'
+import { useBoardViewerStore } from 'client/providers/BoardViewerProvider'
 
 import { OnScreenKeyboard } from './OnScreenKeyboard'
 
 export const DisabledOnScreenKeyboard = () => {
-  const { board, revealedRows } = useBoardViewerProvider()
+  const { board, revealedRows } = useBoardViewerStore()
 
   return (
     <OnScreenKeyboard

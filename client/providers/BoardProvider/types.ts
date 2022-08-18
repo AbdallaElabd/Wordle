@@ -1,4 +1,3 @@
-import { RefCallback } from 'react'
 import { Board, BoardStatus } from 'types/board'
 
 export type BoardContextType = {

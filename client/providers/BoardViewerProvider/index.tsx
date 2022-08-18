@@ -1,111 +1,63 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
-import { useSet } from 'react-use'
+import { InferQueryOutput } from 'server/types'
 import { Board, BoardStatus } from 'types/board'
-import { trpcHooks } from 'utils/trpc'
 import { createEmptyBoard } from 'utils/wordle/board'
+import create from 'zustand'
 
 type BoardViewerContextType = {
-  board: Board | null
+  init: () => void
+  board: Board
   solution: string | null
   boardNotFound: boolean
   internalBoardStatus: BoardStatus
   finalBoardStatus: BoardStatus
   revealedRows: Set<number>
   onRowRevealed: (rowIndex: number) => void
+  onBoardLoaded: (data: InferQueryOutput<'game.startGame'>) => void
+  onBoardError: () => void
 }
 
-export const BoardViewerContext = createContext<BoardViewerContextType>({
-  board: null,
+const initialValues: Pick<
+  BoardViewerContextType,
+  | 'board'
+  | 'solution'
+  | 'boardNotFound'
+  | 'internalBoardStatus'
+  | 'finalBoardStatus'
+  | 'revealedRows'
+> = {
+  board: createEmptyBoard(),
   solution: null,
   boardNotFound: false,
   internalBoardStatus: BoardStatus.InProgress,
   finalBoardStatus: BoardStatus.InProgress,
-  revealedRows: new Set(),
-  onRowRevealed: () => {}
-})
-
-export const useBoardViewerProvider = () => useContext(BoardViewerContext)
-
-export const BoardViewerProvider = ({
-  gameId,
-  children
-}: PropsWithChildren<{ gameId: string }>) => {
-  const [board, setBoard] = useState<Board>(createEmptyBoard())
-  const [boardNotFound, setBoardNotFound] = useState(false)
-  const [solution, setSolution] = useState<string | null>(null)
-  const [internalBoardStatus, setInternalBoardStatus] = useState<BoardStatus>(
-    BoardStatus.InProgress
-  )
-  const [finalBoardStatus, setFinalBoardStatus] = useState<BoardStatus>(
-    BoardStatus.InProgress
-  )
-
-  const { refetch: getGame } = trpcHooks.useQuery(
-    ['game.getGame', { gameId }],
-    {
-      enabled: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      onSuccess(data) {
-        setBoard(data.board)
-        setInternalBoardStatus(data.boardStatus)
-        setSolution(data.solution)
-      },
-      onError() {
-        if (gameId) setBoardNotFound(true)
-      }
-    }
-  )
-
-  useEffect(() => {
-    if (gameId) {
-      getGame()
-    }
-  }, [gameId, getGame])
-
-  const [revealedRows, { add: addRevealedRow }] = useSet<number>(new Set())
-
-  const onRowRevealed = useCallback(
-    (rowIndex: number) => {
-      addRevealedRow(rowIndex)
-      setFinalBoardStatus(internalBoardStatus)
-    },
-    [addRevealedRow, internalBoardStatus]
-  )
-
-  const value = useMemo(
-    () => ({
-      board,
-      solution,
-      boardNotFound,
-      internalBoardStatus,
-      finalBoardStatus,
-      revealedRows,
-      onRowRevealed
-    }),
-    [
-      board,
-      solution,
-      boardNotFound,
-      internalBoardStatus,
-      finalBoardStatus,
-      revealedRows,
-      onRowRevealed
-    ]
-  )
-
-  return (
-    <BoardViewerContext.Provider value={value}>
-      {children}
-    </BoardViewerContext.Provider>
-  )
+  revealedRows: new Set()
 }
+
+export const useBoardViewerStore = create<BoardViewerContextType>(
+  (set, get) => ({
+    ...initialValues,
+    init() {
+      set({
+        board: createEmptyBoard(),
+        solution: null,
+        boardNotFound: false
+      })
+    },
+    onBoardLoaded(data) {
+      set({
+        board: data.board,
+        internalBoardStatus: data.boardStatus,
+        solution: data.solution
+      })
+    },
+    onBoardError() {
+      set({ boardNotFound: true })
+    },
+    onRowRevealed: (rowIndex: number) => {
+      set({
+        revealedRows: get().revealedRows.add(rowIndex),
+        finalBoardStatus: get().internalBoardStatus
+      })
+    }
+  })
+)

@@ -1,10 +1,10 @@
-import { useBoardViewerProvider } from 'client/providers/BoardViewerProvider'
+import { useBoardViewerStore } from 'client/providers/BoardViewerProvider'
 
 import { GameBoard } from '../GameBoard'
 
 export const FinishedBoard = () => {
   const { board, solution, boardNotFound, finalBoardStatus, onRowRevealed } =
-    useBoardViewerProvider()
+    useBoardViewerStore()
 
   return (
     <GameBoard

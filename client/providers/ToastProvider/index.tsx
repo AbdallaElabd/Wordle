@@ -14,11 +14,15 @@ export type Toast = {
   fadeOut: boolean
 }
 
+export type OnToastAddedListener = (toast: Toast) => void
+
 type ToastContextType = {
   toasts: Toast[]
   addToast: (toast: { message: string; isError?: boolean }) => void
-  listeners: Set<Function>
   onToastFadeOutDone: (id: string) => void
+  listeners: OnToastAddedListener[]
+  addListener: (listener: OnToastAddedListener) => void
+  removeListener: (listener: OnToastAddedListener) => void
 }
 
 export const useToastStore = create<ToastContextType>((set) => ({
@@ -47,7 +51,6 @@ export const useToastStore = create<ToastContextType>((set) => ({
       )
     }, FADEOUT_DURATION)
   },
-  listeners: new Set<Function>(),
   // After the toast has faded out, remove it from the list
   onToastFadeOutDone(id: string) {
     set((state) =>
@@ -55,18 +58,24 @@ export const useToastStore = create<ToastContextType>((set) => ({
         draft.toasts = draft.toasts.filter((toast) => toast.id !== id)
       })
     )
+  },
+  listeners: [],
+  addListener(listener: OnToastAddedListener) {
+    set((state) => ({
+      listeners: [...state.listeners, listener]
+    }))
+  },
+  removeListener(listener: OnToastAddedListener) {
+    set((state) => ({
+      listeners: state.listeners.filter((l) => l !== listener)
+    }))
   }
 }))
 
-export type OnToastAddedListener = (toast: Toast) => void
-
 export const useToastListener = (listener: OnToastAddedListener) => {
-  const { listeners } = useToastStore()
-
+  const { addListener, removeListener } = useToastStore()
   useEffect(() => {
-    listeners.add(listener)
-    return () => {
-      listeners.delete(listener)
-    }
-  }, [listener, listeners])
+    addListener(listener)
+    return () => removeListener(listener)
+  }, [addListener, listener, removeListener])
 }
