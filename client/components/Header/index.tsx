@@ -36,7 +36,7 @@ export const Header = () => {
       </Link>
 
       <RightSection>
-        {session.status && (
+        {session.status === 'authenticated' && (
           <>
             <Link href="/history" passHref>
               <HeaderLink>
