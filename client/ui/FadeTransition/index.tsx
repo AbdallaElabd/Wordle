@@ -3,7 +3,14 @@ import styled from '@emotion/styled'
 import { forwardRef, PropsWithChildren, useEffect, useState } from 'react'
 import { animations } from 'styles/animations'
 
-const Container = styled.div<{ isOpen: boolean; fadeOut: boolean }>`
+type ContainerProps = {
+  isOpen: boolean
+  fadeOut: boolean
+  shouldRenderContent: boolean
+}
+const Container = styled.div<ContainerProps>`
+  display: ${({ shouldRenderContent }) =>
+    shouldRenderContent ? 'block' : 'none'};
   pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
   ${({ fadeOut }) =>
     fadeOut
@@ -35,6 +42,7 @@ export const FadeTransition = forwardRef<
       ref={ref}
       className={className}
       isOpen={isOpen}
+      shouldRenderContent={shouldRenderContent}
       fadeOut={!isOpen}
       onAnimationEnd={() => {
         if (!isOpen) setShouldRenderContent(false)
